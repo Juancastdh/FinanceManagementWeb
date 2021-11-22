@@ -1,6 +1,4 @@
 
-
-
 function getCategoryById(categoryId, callback){
     var getCategoryByIdUrl = baseUrl + "/Categories/" + categoryId;
     $.get(getCategoryByIdUrl, function (data) {
@@ -11,7 +9,7 @@ function getCategoryById(categoryId, callback){
 
 
 function getCategories(callback){
-    var getCategoriesUrl = baseUrl + "/Categories/";
+    var getCategoriesUrl = baseUrl + "/Categories";
     $.get(getCategoriesUrl, function (data) {
         callback(data);
     });
