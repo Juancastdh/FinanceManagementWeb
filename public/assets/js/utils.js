@@ -19,3 +19,4 @@ function clearFormValidations() {
             form.classList.remove('was-validated');
         });
 }
+

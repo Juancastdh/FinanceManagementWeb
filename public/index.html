@@ -85,20 +85,6 @@
           <div class="col-12 row">
             <div class="card">
 
-              <div class="filter">
-                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                  <li class="dropdown-header text-start">
-                    <h6>Filter</h6>
-                  </li>
-
-                  <li><a class="dropdown-item" href="#">This Period</a></li>
-                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                  <li><a class="dropdown-item" href="#">This Quarter</a></li>
-                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                </ul>
-              </div>
-
               <div class="card-body">
                 <h5 class="card-title">Reports <span>/This Period</span></h5>
 
@@ -158,20 +144,6 @@
           <div class="col-12 row">
             <div class="card recent-sales">
 
-              <div class="filter">
-                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                  <li class="dropdown-header text-start">
-                    <h6>Filter</h6>
-                  </li>
-
-                  <li><a class="dropdown-item" href="#">This Period</a></li>
-                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                  <li><a class="dropdown-item" href="#">This Quarter</a></li>
-                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                </ul>
-              </div>
-
               <div class="card-body">
                 <h5 class="card-title">Recent Transactions <span>| This Period</span></h5>
 
@@ -217,66 +189,11 @@
         </div>
         <div class="col-lg-4">
           <div class="card">
-            <div class="filter">
-              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <li class="dropdown-header text-start">
-                  <h6>Filter</h6>
-                </li>
-
-                <li><a class="dropdown-item" href="#">This Period</a></li>
-                <li><a class="dropdown-item" href="#">This Month</a></li>
-                <li><a class="dropdown-item" href="#">This Quarter</a></li>
-                <li><a class="dropdown-item" href="#">This Year</a></li>
-              </ul>
-            </div>
 
             <div class="card-body pb-0">
               <h5 class="card-title">Budget Report <span>| This Period</span></h5>
 
               <div id="budgetChart" style="min-height: 400px;" class="echart"></div>
-
-              <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                  var budgetChart = echarts.init(document.querySelector("#budgetChart")).setOption({
-                    legend: {
-                      data: ['Allocated Budget', 'Actual Spending']
-                    },
-                    radar: {
-                      indicator: [{
-                        name: 'Sample Category 1',
-                        max: 20640
-                      },
-                      {
-                        name: 'Sample Category 2',
-                        max: 16000
-                      },
-                      {
-                        name: 'Sample Category 3',
-                        max: 28000
-                      },
-                      {
-                        name: 'Sample Category 4',
-                        max: 26000
-                      }
-                      ]
-                    },
-                    series: [{
-                      name: 'Budget vs spending',
-                      type: 'radar',
-                      data: [{
-                        value: [20640, 16000, 10000, 15000],
-                        name: 'Allocated Budget'
-                      },
-                      {
-                        value: [5000, 14000, 28000, 26000],
-                        name: 'Actual Spending'
-                      }
-                      ]
-                    }]
-                  });
-                });
-              </script>
 
             </div>
           </div>
@@ -306,6 +223,7 @@
   <script src="assets/js/main.js"></script>
   <script src="assets/js/services/categories.js"></script>
   <script src="assets/js/services/transactions.js"></script>
+  <script src="assets/js/services/periods.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="assets/js/config.js"></script>
   <script src="assets/js/index.page.js"></script>

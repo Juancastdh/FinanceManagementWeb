@@ -1,51 +1,55 @@
 var categoriesList = [];
+var currentPeriod;
 
 
 $(document).ready(function () {
-    loadPage();
+  loadPage();
 
 });
 
 function loadPage() {
-    loadCategoriesList(function () {
-        loadCategoriesTotalValues(function(){
-            loadCategorySummaryCards();
-        });
+  loadCategoriesList(function () {
+    loadCategoriesTotalValues(function () {
+      loadCategorySummaryCards()
     });
+    setCurrentPeriod(function () {
+      loadBudgetChart()
+    });
+  });
 }
 
 function loadCategoriesList(callback) {
-    getCategories(function (categories) {
-        categoriesList = categories;
-        categoriesList.sort((a, b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0));
-        callback();
-    });
+  getCategories(function (categories) {
+    categoriesList = categories;
+    categoriesList.sort((a, b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0));
+    callback();
+  });
 }
 
 
 function loadCategoriesTotalValues(callback) {
 
-    var categoriesProcessed = 0
-    categoriesList.forEach(category => {
-        getFinancialReport({ categoryId: category.id }, function (financialReport) {
-            category.totalValue = financialReport.totalValue;
-            categoriesProcessed++;
-            if(categoriesProcessed == categoriesList.length){
-                callback();
-            }            
-        })
-    });
+  var categoriesProcessed = 0
+  categoriesList.forEach(category => {
+    getFinancialReport({ categoryId: category.id }, function (financialReport) {
+      category.totalValue = financialReport.totalValue;
+      categoriesProcessed++;
+      if (categoriesProcessed == categoriesList.length) {
+        callback();
+      }
+    })
+  });
 }
 
-function loadCategorySummaryCards(){
-    categoriesList.forEach(category => {
-        addCategorySummaryCard(category.name, category.totalValue);
-    });
+function loadCategorySummaryCards() {
+  categoriesList.forEach(category => {
+    addCategorySummaryCard(category.name, category.totalValue);
+  });
 }
 
 function addCategorySummaryCard(categoryName, categoryBalance) {
 
-    var categorySummaryCardTemplate = `<div class="col-xxl-4 col-md-6">
+  var categorySummaryCardTemplate = `<div class="col-xxl-4 col-md-6">
     <div class="card info-card revenue-card">
       <div class="card-body">
         <h5 class="card-title">${categoryName}</h5>
@@ -61,6 +65,66 @@ function addCategorySummaryCard(categoryName, categoryBalance) {
     </div>
   </div>`;
 
-    $("#categorySummaryCards").append(categorySummaryCardTemplate);
-
+  $("#categorySummaryCards").append(categorySummaryCardTemplate);
 }
+
+function setCurrentPeriod(callback) {
+
+  var currentDate = new Date();
+
+  getPeriods(function (periods) {
+    currentPeriod = periods.find(period => currentDate >= (new Date(period.startDate)) && currentDate < (new Date(period.endDate)));
+    callback();
+  });
+}
+
+function loadBudgetChart() {
+
+  var indicators = [];
+  var budgetData = [];
+  var expenseData = [];
+
+  var categoriesCount = 0;
+
+  categoriesList.forEach(category => {
+
+    getFinancialReport({ categoryId: category.id, periodId: currentPeriod.id, isExpense: false }, function (incomeFinancialReport) {
+      getFinancialReport({ categoryId: category.id, periodId: currentPeriod.id, isExpense: true }, function (expenseFinancialReport) {
+        indicators.push({ name: category.name, max: (incomeFinancialReport.totalValue + expenseFinancialReport.totalValue) });
+        budgetData.push(incomeFinancialReport.totalValue);
+        expenseData.push(expenseFinancialReport.totalValue);
+        categoriesCount++;
+        if (categoriesCount == categoriesList.length) {
+          renderBudgetChart(indicators, budgetData, expenseData);
+        }
+      });
+    });
+
+  });
+}
+
+function renderBudgetChart(indicators, budgetData, expenseData) {
+
+  echarts.init(document.querySelector("#budgetChart")).setOption({
+    legend: {
+      data: ['Allocated Budget', 'Actual Spending']
+    },
+    radar: {
+      indicator: indicators
+    },
+    series: [{
+      name: 'Budget vs spending',
+      type: 'radar',
+      data: [{
+        value: budgetData,
+        name: 'Allocated Budget'
+      },
+      {
+        value: expenseData,
+        name: 'Actual Spending'
+      }
+      ]
+    }]
+  });
+}
+
