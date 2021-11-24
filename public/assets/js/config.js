@@ -1,1 +1,1 @@
-const baseUrl = "https://localhost:7028/api";
+const baseUrl = "http://localhost:5000/api";
