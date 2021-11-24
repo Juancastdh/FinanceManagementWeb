@@ -6,3 +6,35 @@ function getPeriods(callback){
         });
 }
 
+function addPeriod(period, callback) {
+    var createPeriodsUrl = baseUrl + "/Periods";
+
+    $.ajax({
+        type: "POST",
+        url: createPeriodsUrl,
+        data: JSON.stringify(period),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function () {
+            callback();
+        },
+        error: function (errMsg) {
+            console.log(errMsg);
+        }
+    });
+}
+
+function deletePeriodById(periodId, callback) {
+
+    var deletePeriodUrl = baseUrl + "/Periods/" + periodId;
+    $.ajax({
+        type: "DELETE",
+        url: deletePeriodUrl,
+        success: function () {
+            callback();
+        },
+        error: function (errMsg) {
+            console.log(errMsg);
+        }
+    });
+}

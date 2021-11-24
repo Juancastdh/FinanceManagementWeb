@@ -12,7 +12,7 @@ function loadPage() {
 
     $("#addPeriodButton").click(function () {
         if (verifyForm()) {
-            addPeriod();
+            savePeriod();
             clearFormValidations();
         }
     });
@@ -81,25 +81,16 @@ function addCheckboxBehavior() {
     });
 }
 
-function addPeriod() {
-    var createPeriodsUrl = baseUrl + "/Periods";
+function savePeriod() {
 
-    $.ajax({
-        type: "POST",
-        url: createPeriodsUrl,
-        data: JSON.stringify({
-            startDate: $("#startDateField").val() + "T00:00:00",
-            endDate: $("#endDateField").val() + "T00:00:00"
-        }),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function () {
-            clearFields();
-            loadPeriodsTable();
-        },
-        error: function (errMsg) {
-            console.log(errMsg);
-        }
+    var period = {
+        startDate: $("#startDateField").val() + "T00:00:00",
+        endDate: $("#endDateField").val() + "T00:00:00"
+    };
+
+    addPeriod(period, function(){
+        clearFields();
+        loadPeriodsTable();
     });
 }
 
@@ -120,19 +111,10 @@ function removeSelectedPeriods() {
 
 function removePeriodById(periodId) {
 
-    var deletePeriodUrl = baseUrl + "/Periods/" + periodId;
-    $.ajax({
-        type: "DELETE",
-        url: deletePeriodUrl,
-        success: function () {
-            loadPeriodsTable();
-            $("#removeButton").prop("disabled", true);
-        },
-        error: function (errMsg) {
-            console.log(errMsg);
-        }
+    deletePeriodById(periodId, function(){
+        loadPeriodsTable();
+        $("#removeButton").prop("disabled", true);
     });
-
 }
 
 function setInvalidDateAlert() {
