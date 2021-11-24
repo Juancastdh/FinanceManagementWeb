@@ -3,7 +3,6 @@ var categoriesTable;
 
 $(document).ready(function () {
     loadPage();
-    $("#categoriesTable").DataTable();
 });
 
 function loadPage() {
@@ -95,17 +94,24 @@ function clearFields() {
 function removeSelectedCategories() {
     var $selectedCheckboxes = $('input[name=cb]:checked');
 
+    var categoriesRemoved = 0;
+
     $selectedCheckboxes.each(function () {
         var categoryId = ($(this).attr('id')).replace("cb", "");
-        removeCategoryById(categoryId);
+        removeCategoryById(categoryId, function(){
+            categoriesRemoved++;
+            if(categoriesRemoved == $selectedCheckboxes.length){
+                loadCategoriesTable();
+                $("#removeButton").prop("disabled", true);
+            }
+        });
     });
 
 }
 
-function removeCategoryById(categoryId) {
+function removeCategoryById(categoryId, callback) {
 
     deleteCategoryById(categoryId, function () {
-        loadCategoriesTable();
-        $("#removeButton").prop("disabled", true);
+        callback();
     });
 }
