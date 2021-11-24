@@ -112,12 +112,6 @@ function loadBudgetChart() {
         expenseData.push(0 - expenseFinancialReport.totalValue);
         categoriesCount++;
         if (categoriesCount == categoriesList.length) {
-          console.log("Indicators:");
-          console.log(indicators);
-          console.log("Budget data:");
-          console.log(budgetData);
-          console.log("Expense data:");
-          console.log(expenseData);
           renderBudgetChart(indicators, budgetData, expenseData);
         }
       });
@@ -222,6 +216,8 @@ function loadReportsChart() {
         transactionsGroupedByDate.forEach(transaction =>{
 
           seriesValue += transaction.value;
+
+          seriesValue = Math.round((seriesValue + Number.EPSILON) * 100) / 100;
 
           seriesData.push({
             y: seriesValue,
