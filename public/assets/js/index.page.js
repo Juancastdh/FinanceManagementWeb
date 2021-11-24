@@ -107,11 +107,17 @@ function loadBudgetChart() {
 
     getFinancialReport({ categoryId: category.id, periodId: currentPeriod.id, isExpense: false }, function (incomeFinancialReport) {
       getFinancialReport({ categoryId: category.id, periodId: currentPeriod.id, isExpense: true }, function (expenseFinancialReport) {
-        indicators.push({ name: category.name, max: (incomeFinancialReport.totalValue + expenseFinancialReport.totalValue) });
+        indicators.push({ name: category.name, max: (incomeFinancialReport.totalValue + (0 - expenseFinancialReport.totalValue)) });
         budgetData.push(incomeFinancialReport.totalValue);
-        expenseData.push(expenseFinancialReport.totalValue);
+        expenseData.push(0 - expenseFinancialReport.totalValue);
         categoriesCount++;
         if (categoriesCount == categoriesList.length) {
+          console.log("Indicators:");
+          console.log(indicators);
+          console.log("Budget data:");
+          console.log(budgetData);
+          console.log("Expense data:");
+          console.log(expenseData);
           renderBudgetChart(indicators, budgetData, expenseData);
         }
       });
