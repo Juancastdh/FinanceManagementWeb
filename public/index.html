@@ -84,108 +84,31 @@
 
           <div class="col-12 row">
             <div class="card">
+              <div class="filter">
+                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                  <li class="dropdown-header text-start">
+                    <h6>Filter</h6>
+                  </li>
 
+                  <li><a class="dropdown-item" name="reports-filter" id="filter-month">This Month</a></li>
+                  <li><a class="dropdown-item" name="reports-filter" id="filter-quarter">This Quarter</a></li>
+                  <li><a class="dropdown-item" name="reports-filter" id="filter-semester">This Semester</a></li>
+                  <li><a class="dropdown-item" name="reports-filter" id="filter-year">This Year</a></li>
+                </ul>
+              </div>
               <div class="card-body">
-                <h5 class="card-title">Reports <span>/This Period</span></h5>
+                <h5 class="card-title">Reports <span id="current-reports-filter">/This Month</span></h5>
 
                 <div id="reportsChart"></div>
 
                 <script>
-                  document.addEventListener("DOMContentLoaded", () => {
-                    new ApexCharts(document.querySelector("#reportsChart"), {
-                      series: [{
-                        name: '{Category}',
-                        data: [31, 40, 28, 51, 42, 82, 56],
-                      }],
-                      chart: {
-                        height: 350,
-                        type: 'area',
-                        toolbar: {
-                          show: false
-                        },
-                      },
-                      markers: {
-                        size: 4
-                      },
-                      colors: ['#4154f1', '#2eca6a', '#ff771d'],
-                      fill: {
-                        type: "gradient",
-                        gradient: {
-                          shadeIntensity: 1,
-                          opacityFrom: 0.3,
-                          opacityTo: 0.4,
-                          stops: [0, 90, 100]
-                        }
-                      },
-                      dataLabels: {
-                        enabled: false
-                      },
-                      stroke: {
-                        curve: 'smooth',
-                        width: 2
-                      },
-                      xaxis: {
-                        type: 'datetime',
-                        categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
-                      },
-                      tooltip: {
-                        x: {
-                          format: 'dd/MM/yy HH:mm'
-                        },
-                      }
-                    }).render();
-                  });
+                  
                 </script>
 
               </div>
             </div>
-          </div>
-
-          <div class="col-12 row">
-            <div class="card recent-sales">
-
-              <div class="card-body">
-                <h5 class="card-title">Recent Transactions <span>| This Period</span></h5>
-
-                <table class="table table-borderless datatable">
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Description</th>
-                      <th scope="col">Category</th>
-                      <th scope="col">Value</th>
-                      <th scope="col">Type</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th scope="row"><a href="#">#2457</a></th>
-                      <td>Sample Income Transaction</td>
-                      <td>Sample Category 1</a></td>
-                      <td>$20,640.00</td>
-                      <td><span class="badge bg-success">Income</span></td>
-                    </tr>
-                    <tr>
-                      <th scope="row"><a href="#">#2644</a></th>
-                      <td>Sample Expense Transaction</td>
-                      <td>Sample Category 1</a></td>
-                      <td>$2,600.00</td>
-                      <td><span class="badge bg-danger">Expense</span></td>
-                    </tr>
-                    <tr>
-                      <th scope="row"><a href="#">#2645</a></th>
-                      <td>Sample Expense Transaction 2</td>
-                      <td>Sample Category 1</a></td>
-                      <td>$1,500.00</td>
-                      <td><span class="badge bg-danger">Expense</span></td>
-                    </tr>
-                  </tbody>
-                </table>
-
-              </div>
-
-            </div>
-          </div>
+          </div>          
         </div>
         <div class="col-lg-4">
           <div class="card">
@@ -227,6 +150,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="assets/js/config.js"></script>
   <script src="assets/js/index.page.js"></script>
+  <script src="assets/js/utils.js"></script>
 
 </body>
 
