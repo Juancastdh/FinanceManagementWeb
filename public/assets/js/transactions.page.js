@@ -87,10 +87,11 @@ function loadTransactionsTable() {
             addTransactionToList(transaction, function () {
                 addedTransactions++;
                 if (addedTransactions == transactions.length) {
+                    transactionsList.sort((a, b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0));
                     transactionsTable.clear();
                     transactionsTable.rows.add(transactionsList);
                     transactionsTable.draw();
-                    addCheckboxBehavior();          
+                    addCheckboxBehavior();
                 }
             });
         });
@@ -100,16 +101,10 @@ function loadTransactionsTable() {
 function addTransactionToList(transaction, callback) {
     getCategoryById(transaction.categoryId, function (transactionCategory) {
         transaction.categoryName = transactionCategory.name;
-        addTransactionWithCategoryToList(transaction);
+        transactionsList.push(transaction);       
         callback();
     });
 }
-
-function addTransactionWithCategoryToList(transaction) {
-    transactionsList.push(transaction);
-    transactionsList.sort((a, b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0));
-}
-
 
 function addCheckboxBehavior() {
     $('input[name=cb]').change(function () {
@@ -195,7 +190,6 @@ function loadCategoriesCombobox() {
             </option>`)
         });
     });
-
 }
 
 function loadPeriodsList() {
