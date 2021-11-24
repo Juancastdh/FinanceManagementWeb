@@ -12,7 +12,7 @@ function loadPage() {
     loadCategoriesTable();
 
     $("#addCategoryButton").click(function () {
-        addCategory();
+        saveCategory();
     });
 
     $("#resetButton").click(function () {
@@ -24,7 +24,7 @@ function loadPage() {
     });
 }
 
-function initializeCategoriesTable(){
+function initializeCategoriesTable() {
     categoriesTable = $('#categoriesTable').DataTable({
         data: categoriesList,
         columns: [
@@ -52,7 +52,7 @@ function initializeCategoriesTable(){
 
 function loadCategoriesTable() {
 
-    getCategories(function(categories){
+    getCategories(function (categories) {
         categoriesList = categories;
         categoriesTable.clear();
         categoriesTable.rows.add(categoriesList);
@@ -74,25 +74,16 @@ function addCheckboxBehavior() {
     });
 }
 
-function addCategory() {
-    var createCategoriesUrl = baseUrl + "/Categories";
+function saveCategory() {
 
-    $.ajax({
-        type: "POST",
-        url: createCategoriesUrl,
-        data: JSON.stringify({
-            name: $("#categoryNameField").val(),
-            percentage: $("#categoryPercentageField").val()
-        }),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function () {
-            clearFields();
-            loadCategoriesTable();
-        },
-        error: function (errMsg) {
-            console.log(errMsg);
-        }
+    var category = {
+        name: $("#categoryNameField").val(),
+        percentage: $("#categoryPercentageField").val()
+    };
+
+    addCategory(category, function () {
+        clearFields();
+        loadCategoriesTable();
     });
 }
 
@@ -113,16 +104,8 @@ function removeSelectedCategories() {
 
 function removeCategoryById(categoryId) {
 
-    var deleteCategoryUrl = baseUrl + "/Categories/" + categoryId;
-    $.ajax({
-        type: "DELETE",
-        url: deleteCategoryUrl,
-        success: function () {
-            loadCategoriesTable();
-            $("#removeButton").prop("disabled", true);
-        },
-        error: function (errMsg) {
-            console.log(errMsg);
-        }
+    deleteCategoryById(categoryId, function () {
+        loadCategoriesTable();
+        $("#removeButton").prop("disabled", true);
     });
 }
