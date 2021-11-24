@@ -11,7 +11,7 @@ function loadPage() {
     loadPeriodsTable();
 
     $("#addPeriodButton").click(function () {
-        if (verifyForm()) {
+        if (isFormValid()) {
             savePeriod();
             clearFormValidations();
         }
@@ -102,23 +102,23 @@ function clearFields() {
 function removeSelectedPeriods() {
     var $selectedCheckboxes = $('input[name=cb]:checked');
 
+    var removedPeriods = 0;
+
     $selectedCheckboxes.each(function () {
         var periodId = ($(this).attr('id')).replace("cb", "");
-        removePeriodById(periodId);
+        deletePeriodById(periodId, function(){
+            removedPeriods++;
+            if(removedPeriods == $selectedCheckboxes.length){
+                loadPeriodsTable();
+                $("#removeButton").prop("disabled", true);
+            }
+        });
     });
 
-}
-
-function removePeriodById(periodId) {
-
-    deletePeriodById(periodId, function(){
-        loadPeriodsTable();
-        $("#removeButton").prop("disabled", true);
-    });
 }
 
 function setInvalidDateAlert() {
-    alert("End date cannot be equal to or lower than start date.")
+    alert("End date cannot be equal to or lower than start date.");
 }
 
 function checkDatesValidity() {
@@ -135,7 +135,7 @@ function checkDatesValidity() {
 
 
 
-function verifyForm() {
+function isFormValid() {
     var addPeriodForm = document.getElementById("addPeriodForm");
     var formIsValid = addPeriodForm.checkValidity();
 

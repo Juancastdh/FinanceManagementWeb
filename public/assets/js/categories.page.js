@@ -98,20 +98,12 @@ function removeSelectedCategories() {
 
     $selectedCheckboxes.each(function () {
         var categoryId = ($(this).attr('id')).replace("cb", "");
-        removeCategoryById(categoryId, function(){
+        deleteCategoryById(categoryId, function(){
             categoriesRemoved++;
             if(categoriesRemoved == $selectedCheckboxes.length){
                 loadCategoriesTable();
                 $("#removeButton").prop("disabled", true);
             }
         });
-    });
-
-}
-
-function removeCategoryById(categoryId, callback) {
-
-    deleteCategoryById(categoryId, function () {
-        callback();
     });
 }
