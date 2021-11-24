@@ -21,3 +21,46 @@ function getFinancialReport(parameters, callback){
         callback(data);
         });
 }
+
+function getTransactions(callback){
+
+    var getTransactionsUrl = baseUrl + "/FinancialTransactions";
+
+    $.get(getTransactionsUrl, function (transactions) {
+        callback(transactions);
+    });
+
+}
+
+function addTransaction(transaction, callback) {
+    var createTransactionsUrl = baseUrl + "/FinancialTransactions";
+
+    $.ajax({
+        type: "POST",
+        url: createTransactionsUrl,
+        data: JSON.stringify(transaction),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function () {
+            callback();
+        },
+        error: function (errMsg) {
+            console.log(errMsg);
+        }
+    });
+}
+
+function deleteTransactionById(transactionId, callback){
+
+    var deleteTransactionUrl = baseUrl + "/FinancialTransactions/" + transactionId;
+    $.ajax({
+        type: "DELETE",
+        url: deleteTransactionUrl,
+        success: function () {
+            callback();
+        },
+        error: function (errMsg) {
+            console.log(errMsg);
+        }
+    });
+}

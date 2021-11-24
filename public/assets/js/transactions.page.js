@@ -15,7 +15,7 @@ function loadPage() {
 
     $("#addTransactionButton").click(function () {
         if(verifyForm()){
-            addTransaction();
+            saveTransaction();
             clearFormValidations();
         }
        
@@ -80,11 +80,9 @@ function initializeTransactionsTable(){
 
 function loadTransactionsTable() {
 
-    var getTransactionsUrl = baseUrl + "/FinancialTransactions";
-
     var addedTransactions = 0;
 
-    $.get(getTransactionsUrl, function (transactions) {
+    getTransactions(function(transactions){
         transactions.forEach(transaction => {
             addTransactionToList(transaction, function () {
                 addedTransactions++;
@@ -95,10 +93,8 @@ function loadTransactionsTable() {
                     addCheckboxBehavior();          
                 }
             });
-
         });
     });
-
 }
 
 function addTransactionToList(transaction, callback) {
@@ -111,7 +107,8 @@ function addTransactionToList(transaction, callback) {
 
 function addTransactionWithCategoryToList(transaction) {
     transactionsList.push(transaction);
-    transactionsList.sort((a, b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0));}
+    transactionsList.sort((a, b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0));
+}
 
 
 function addCheckboxBehavior() {
@@ -127,8 +124,8 @@ function addCheckboxBehavior() {
     });
 }
 
-function addTransaction() {
-    var createTransactionsUrl = baseUrl + "/FinancialTransactions";
+function saveTransaction() {
+
     var isTransactionExpense;
 
     if ($('#transactionIncomeType').is(':checked')) {
@@ -143,27 +140,19 @@ function addTransaction() {
 
     var transactionPeriod = getPeriodByDate(new Date(transactionDate));
 
-    $.ajax({
-        type: "POST",
-        url: createTransactionsUrl,
-        data: JSON.stringify({
-            date: transactionDate,
-            value: $("#transactionValueField").val(),
-            description: $("#transactionDescriptionField").val(),
-            categoryId: $("#categoryCombobox").val(),
-            isExpense: isTransactionExpense,
-            periodId: transactionPeriod.id
-        }),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function () {
-            clearFields();
-            clearTransactionsList();
-            loadTransactionsTable();
-        },
-        error: function (errMsg) {
-            console.log(errMsg);
-        }
+    var transaction = {
+        date: transactionDate,
+        value: $("#transactionValueField").val(),
+        description: $("#transactionDescriptionField").val(),
+        categoryId: $("#categoryCombobox").val(),
+        isExpense: isTransactionExpense,
+        periodId: transactionPeriod.id
+    };
+
+    addTransaction(transaction, function(){
+        clearFields();
+        clearTransactionsList();
+        loadTransactionsTable();
     });
 }
 
@@ -186,7 +175,7 @@ function removeSelectedTransactions() {
 
     $selectedCheckboxes.each(function () {
         var transactionId = ($(this).attr('id')).replace("cb", "");
-        removeTransaction(transactionId, function () {
+        deleteTransactionById(transactionId, function () {
             transactionsRemoved++;
             if (transactionsRemoved == $selectedCheckboxes.length) {
                 $("#removeButton").prop("disabled", true);
@@ -194,23 +183,6 @@ function removeSelectedTransactions() {
                 loadTransactionsTable();                
             }
         });
-    });
-
-}
-
-function removeTransaction(transactionId, callback) {
-
-    var deleteTransactionUrl = baseUrl + "/FinancialTransactions/" + transactionId;
-    $.ajax({
-        type: "DELETE",
-        url: deleteTransactionUrl,
-        success: function () {
-            callback();
-            $("#removeButton").prop("disabled", true);
-        },
-        error: function (errMsg) {
-            console.log(errMsg);
-        }
     });
 }
 
