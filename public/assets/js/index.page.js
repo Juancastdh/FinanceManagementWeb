@@ -10,18 +10,18 @@ $(document).ready(function () {
   $('a[name="reports-filter"]').click(function () {
     reportsSelectedFilter = $(this).attr('id');
     var selectedValue = $(this).text();
-    loadReportsChart();
     $("#current-reports-filter").text(`/${selectedValue}`);
+    loadReportsChart();
   });
 });
 
 function loadPage() {
   loadCategoriesList(function () {
     loadCategoriesTotalValues(function () {
-      loadCategorySummaryCards()
+      loadCategorySummaryCards();
     });
     setCurrentPeriod(function () {
-      loadBudgetChart()
+      loadBudgetChart();
     });   
   });
   loadReportsChart();
@@ -231,8 +231,7 @@ function loadReportsChart() {
           }
           else{
             updateReportsChart(seriesData);
-          }
-          
+          }      
         }
       });
     });
@@ -325,4 +324,3 @@ function updateReportsChart(seriesData){
     data: seriesData
   }]);
 }
-
