@@ -131,6 +131,7 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 14px;
   padding: 10px 15px;
   transition: 0.3s;
+  color: #f6f9ff
 }
 .dropdown-menu .dropdown-item i {
   margin-right: 10px;
@@ -259,6 +260,16 @@ h1, h2, h3, h4, h5, h6 {
 .card-body input:focus{
   background-color: #424242;
   color: #f6f9ff;
+}
+
+.card-body select{
+  background-color: #424242;
+  color: #f6f9ff;
+}
+
+.card-body .form-check-input{
+  border-color: #f6f9ff;
+
 }
 
 
@@ -683,25 +694,25 @@ h1, h2, h3, h4, h5, h6 {
 # Dashboard
 --------------------------------------------------------------*/
 /* Filter dropdown */
-.dashboard .filter {
+.filter {
   position: absolute;
   right: 0px;
   top: 15px;
 }
-.dashboard .filter .icon {
+.filter .icon {
   color: #aab7cf;
   padding-right: 20px;
   padding-bottom: 5px;
   transition: 0.3s;
   font-size: 16px;
 }
-.dashboard .filter .icon:hover, .dashboard .filter .icon:focus {
+.filter .icon:hover, .dashboard .filter .icon:focus {
   color: #4154f1;
 }
-.dashboard .filter .dropdown-header {
+ .filter .dropdown-header {
   padding: 8px 15px;
 }
-.dashboard .filter .dropdown-header h6 {
+ .filter .dropdown-header h6 {
   text-transform: uppercase;
   font-size: 14px;
   font-weight: 600;
@@ -710,7 +721,7 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 0;
   padding: 0;
 }
-.dashboard .filter .dropdown-item {
+.filter .dropdown-item {
   padding: 8px 15px;
   color: #f6f9ff
 }
