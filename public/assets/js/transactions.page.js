@@ -1,24 +1,36 @@
 var transactionsList = [];
 var periodsList;
 var transactionsTable;
+var currentPeriod;
+var reportsSelectedFilter = "filter-period";
 
 $(document).ready(function () {
     loadPage();
 
+    $('a[name="reports-filter"]').click(function () {
+        reportsSelectedFilter = $(this).attr('id');
+        var selectedValue = $(this).text();
+        $("#current-reports-filter").text(`/${selectedValue}`);
+        clearTransactionsList();
+        loadTransactionsTable();
+    });
 });
 
 function loadPage() {
     initializeTransactionsTable();
-    loadTransactionsTable();
+    setCurrentPeriod(function () {
+        loadTransactionsTable();
+    });
+
     loadCategoriesCombobox();
     loadPeriodsList();
 
     $("#addTransactionButton").click(function () {
-        if(verifyForm()){
+        if (verifyForm()) {
             saveTransaction();
             clearFormValidations();
         }
-       
+
     });
 
     $("#resetButton").click(function () {
@@ -30,7 +42,7 @@ function loadPage() {
     });
 }
 
-function initializeTransactionsTable(){
+function initializeTransactionsTable() {
 
     transactionsTable = $('#transactionsTable').DataTable({
         data: transactionsList,
@@ -80,9 +92,20 @@ function initializeTransactionsTable(){
 
 function loadTransactionsTable() {
 
-    var addedTransactions = 0;
+    if (reportsSelectedFilter == "filter-none") {
+        loadAllTransactionsToTable();
+    }
+    else if (reportsSelectedFilter == "filter-period") {
+        loadCurrentPeriodTransactionsToTable();
+    }
+    else {
+        loadTransactionsToTableByMonthlyRange();
+    }
+}
 
-    getTransactions(function(transactions){
+function loadAllTransactionsToTable() {
+    var addedTransactions = 0;
+    getTransactions(function (transactions) {
         transactions.forEach(transaction => {
             addTransactionToList(transaction, function () {
                 addedTransactions++;
@@ -98,10 +121,58 @@ function loadTransactionsTable() {
     });
 }
 
+function loadCurrentPeriodTransactionsToTable() {
+
+    var addedTransactions = 0;
+    getFinancialReport({ periodId: currentPeriod.id }, function (financialReport) {
+        financialReport.financialTransactions.forEach(transaction => {
+            addTransactionToList(transaction, function () {
+                addedTransactions++;
+                if (addedTransactions == financialReport.financialTransactions.length) {
+                    transactionsList.sort((a, b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0));
+                    transactionsTable.clear();
+                    transactionsTable.rows.add(transactionsList);
+                    transactionsTable.draw();
+                    addCheckboxBehavior();
+                }
+            });
+        });
+    });
+}
+
+function loadTransactionsToTableByMonthlyRange() {
+
+    var periodFilterRange = getMonthRangeByType(reportsSelectedFilter.replace("filter-", ""));
+    var periodsProcessed = 0;
+
+    var filteredPeriods = getPeriodsThatStartInARangeOMonths(periodFilterRange.startMonth, periodFilterRange.endMonth);
+    filteredPeriods.forEach(period => {
+        getFinancialReport({ periodId: period.id }, function (financialReport) {
+            var addedTransactions = 0;
+            financialReport.financialTransactions.forEach(transaction => {
+                addTransactionToList(transaction, function () {
+                    addedTransactions++;
+                    if (addedTransactions == financialReport.financialTransactions.length) {
+                        periodsProcessed++;
+                    }
+                    if (periodsProcessed == filteredPeriods.length) {
+                        transactionsList.sort((a, b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0));
+                        transactionsTable.clear();
+                        transactionsTable.rows.add(transactionsList);
+                        transactionsTable.draw();
+                        addCheckboxBehavior();
+                    }
+                });
+            });
+            
+        });
+    });
+}
+
 function addTransactionToList(transaction, callback) {
     getCategoryById(transaction.categoryId, function (transactionCategory) {
         transaction.categoryName = transactionCategory.name;
-        transactionsList.push(transaction);       
+        transactionsList.push(transaction);
         callback();
     });
 }
@@ -144,7 +215,7 @@ function saveTransaction() {
         periodId: transactionPeriod.id
     };
 
-    addTransaction(transaction, function(){
+    addTransaction(transaction, function () {
         clearFields();
         clearTransactionsList();
         loadTransactionsTable();
@@ -175,7 +246,7 @@ function removeSelectedTransactions() {
             if (transactionsRemoved == $selectedCheckboxes.length) {
                 $("#removeButton").prop("disabled", true);
                 clearTransactionsList();
-                loadTransactionsTable();                
+                loadTransactionsTable();
             }
         });
     });
@@ -206,13 +277,13 @@ function getPeriodByDate(date) {
     return period;
 }
 
-function isFormDateWithinExistingPeriod(){
+function isFormDateWithinExistingPeriod() {
 
     var formDate = $("#transactionDateField").val();
 
     var period = getPeriodByDate(new Date(formDate));
 
-    if(period == null){
+    if (period == null) {
         return false;
     }
 
@@ -227,8 +298,8 @@ function verifyForm() {
     var addTransactionForm = document.getElementById("addTransactionForm");
     var formIsValid = addTransactionForm.checkValidity();
 
-    if(formIsValid){
-        if(!isFormDateWithinExistingPeriod()){
+    if (formIsValid) {
+        if (!isFormDateWithinExistingPeriod()) {
             formIsValid = false;
             setInvalidDateAlert();
         }
@@ -237,4 +308,74 @@ function verifyForm() {
     addTransactionForm.classList.add('was-validated');
 
     return formIsValid;
+}
+
+function getPeriodByDate(date, callback) {
+
+    getPeriods(function (periods) {
+        period = periods.find(period => date >= (new Date(period.startDate)) && date < (new Date(period.endDate)));
+        callback(period);
+    });
+}
+
+function setCurrentPeriod(callback) {
+
+    var currentDate = new Date();
+
+    getPeriodByDate(currentDate, function (period) {
+        currentPeriod = period;
+        callback();
+    });
+}
+
+
+function getMonthRangeByType(type) {
+
+    var currentDate = new Date();
+    var currentMonth = currentDate.getMonth() + 1;
+    var monthRange = { startMonth: 0, endMonth: 0 }
+
+    if (type == "month") {
+        monthRange.startMonth = currentMonth;
+        monthRange.endMonth = currentMonth;
+    }
+
+    if (type == "quarter") {
+
+        if (currentMonth <= 4) {
+            monthRange.startMonth = 1;
+            monthRange.endMonth = 4;
+        }
+        else if (currentMonth <= 8) {
+            monthRange.startMonth = 5;
+            monthRange.endMonth = 8;
+        }
+        else {
+            monthRange.startMonth = 9;
+            monthRange.endMonth = 12;
+        }
+    }
+
+    if (type == "semester") {
+        if (currentMonth <= 6) {
+            monthRange.startMonth = 1;
+            monthRange.endMonth = 6;
+        }
+        else {
+            monthRange.startMonth = 7;
+            monthRange.endMonth = 12;
+        }
+    }
+
+    if (type == "year") {
+        monthRange.startMonth = 1;
+        monthRange.endMonth = 12;
+    }
+
+    return monthRange;
+}
+
+function getPeriodsThatStartInARangeOMonths(startMonth, endMonth) {
+    filteredPeriods = periodsList.filter(period => (new Date(period.startDate).getMonth() + 1) >= startMonth && (new Date(period.startDate).getMonth() + 1) <= endMonth);
+    return filteredPeriods;
 }

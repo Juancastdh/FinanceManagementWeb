@@ -94,8 +94,24 @@
 
           <div class="row">
             <div class="card">
+              <div class="filter">
+                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                  <li class="dropdown-header text-start">
+                    <h6>Filter</h6>
+                  </li>
+
+                  <li><a class="dropdown-item" name="reports-filter" id="filter-period">This Period</a></li>                  
+                  <li><a class="dropdown-item" name="reports-filter" id="filter-month">This Month</a></li>
+                  <li><a class="dropdown-item" name="reports-filter" id="filter-quarter">This Quarter</a></li>
+                  <li><a class="dropdown-item" name="reports-filter" id="filter-semester">This Semester</a></li>
+                  <li><a class="dropdown-item" name="reports-filter" id="filter-year">This Year</a></li>
+                  <li><a class="dropdown-item" name="reports-filter" id="filter-none">All</a></li>
+
+                </ul>
+              </div>
               <div class="card-body">
-                <h5 class="card-title">Transactions</h5>
+                <h5 class="card-title">Transactions <span id="current-reports-filter">/This Period</span></h5>
                 <table class="table table-striped" id="transactionsTable">
                   <thead>
                     <tr>
