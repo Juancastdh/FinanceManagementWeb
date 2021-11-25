@@ -38,3 +38,11 @@ function deletePeriodById(periodId, callback) {
         }
     });
 }
+
+function getPeriodByDate(date, callback) {
+
+    getPeriods(function (periods) {
+        period = periods.find(period => date >= (new Date(period.startDate)) && date < (new Date(period.endDate)));
+        callback(period);
+    });
+}
