@@ -116,7 +116,10 @@ function renderBudgetChart(indicators, budgetData, expenseData) {
 
   echarts.init(document.querySelector("#budgetChart")).setOption({
     legend: {
-      data: ['Allocated Budget', 'Actual Spending']
+      data: ['Allocated Budget', 'Actual Spending'],
+      textStyle: {
+        color: "#f6f9ff"
+      }
     },
     radar: {
       indicator: indicators
@@ -133,7 +136,11 @@ function renderBudgetChart(indicators, budgetData, expenseData) {
         name: 'Actual Spending'
       }
       ]
-    }]
+    }],
+    textStyle: {
+      color: "#f6f9ff"
+
+    }
   });
 }
 
@@ -233,6 +240,7 @@ function initializeReportsChart(seriesData) {
       toolbar: {
         show: false
       },
+      foreColor: '#f6f9ff'
     },
     markers: {
       size: 4
@@ -259,6 +267,9 @@ function initializeReportsChart(seriesData) {
     stroke: {
       curve: 'smooth',
       width: 2
+    },
+    tooltip:{
+      theme: "dark"
     }
   });
 
