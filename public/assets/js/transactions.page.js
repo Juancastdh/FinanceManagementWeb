@@ -204,7 +204,7 @@ function saveTransaction() {
 
     var transactionDate = $("#transactionDateField").val() + "T00:00:00";
 
-    var transactionPeriod = getPeriodByDate(new Date(transactionDate));
+    var transactionPeriod = getPeriodByDateFromPeriodList(new Date(transactionDate));
 
     var transaction = {
         date: transactionDate,
@@ -270,7 +270,7 @@ function loadPeriodsList() {
     });
 }
 
-function getPeriodByDate(date) {
+function getPeriodByDateFromPeriodList(date) {
 
     var period = periodsList.find(period => date >= (new Date(period.startDate)) && date < (new Date(period.endDate)));
 
@@ -281,7 +281,7 @@ function isFormDateWithinExistingPeriod() {
 
     var formDate = $("#transactionDateField").val();
 
-    var period = getPeriodByDate(new Date(formDate));
+    var period = getPeriodByDateFromPeriodList(new Date(formDate));
 
     if (period == null) {
         return false;
