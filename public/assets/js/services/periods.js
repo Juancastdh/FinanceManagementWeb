@@ -1,9 +1,9 @@
-function getPeriods(callback){
+function getPeriods(callback) {
     var getPeriodsUrl = baseUrl + "/Periods";
 
     $.get(getPeriodsUrl, function (data) {
         callback(data);
-        });
+    });
 }
 
 function addPeriod(period, callback) {
@@ -45,4 +45,16 @@ function getPeriodByDate(date, callback) {
         period = periods.find(period => date >= (new Date(period.startDate)) && date < (new Date(period.endDate)));
         callback(period);
     });
+}
+
+function getLatestPeriod(callback) {
+
+    getPeriods(function (periods) {
+
+        var orderedPeriods = periods.sort((a, b) => (a.startDate > b.startDate) ? 1 : ((b.startDate > a.startDate) ? -1 : 0));
+        var latestPeriod = orderedPeriods[orderedPeriods.length - 1];
+        callback(latestPeriod);
+
+    });
+
 }

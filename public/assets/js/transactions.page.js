@@ -1,7 +1,6 @@
 var transactionsList = [];
 var periodsList;
 var transactionsTable;
-var currentPeriod;
 var reportsSelectedFilter = "filter-period";
 
 $(document).ready(function () {
@@ -164,7 +163,7 @@ function loadTransactionsToTableByMonthlyRange() {
                     }
                 });
             });
-            
+
         });
     });
 }
@@ -308,15 +307,6 @@ function verifyForm() {
     addTransactionForm.classList.add('was-validated');
 
     return formIsValid;
-}
-
-function setCurrentPeriod(callback) {
-
-    getPeriods(function(periods){
-        var orderedPeriods = periods.sort((a, b) => (a.startDate > b.startDate) ? 1 : ((b.startDate > a.startDate) ? -1 : 0));
-        currentPeriod = orderedPeriods[orderedPeriods.length-1];
-        callback();  
-      });
 }
 
 function getPeriodsThatStartInARangeOMonths(startMonth, endMonth) {
