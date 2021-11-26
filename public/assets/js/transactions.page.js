@@ -312,12 +312,11 @@ function verifyForm() {
 
 function setCurrentPeriod(callback) {
 
-    var currentDate = new Date();
-
-    getPeriodByDate(currentDate, function (period) {
-        currentPeriod = period;
-        callback();
-    });
+    getPeriods(function(periods){
+        var orderedPeriods = periods.sort((a, b) => (a.startDate > b.startDate) ? 1 : ((b.startDate > a.startDate) ? -1 : 0));
+        currentPeriod = orderedPeriods[orderedPeriods.length-1];
+        callback();  
+      });
 }
 
 function getPeriodsThatStartInARangeOMonths(startMonth, endMonth) {

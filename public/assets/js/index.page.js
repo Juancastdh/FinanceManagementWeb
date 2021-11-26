@@ -79,12 +79,13 @@ function addCategorySummaryCard(categoryName, categoryBalance) {
 
 function setCurrentPeriod(callback) {
 
-  var currentDate = new Date();
+  getPeriods(function(periods){
 
-  getPeriodByDate(currentDate, function (period) {
-    currentPeriod = period;
+    var orderedPeriods = periods.sort((a, b) => (a.startDate > b.startDate) ? 1 : ((b.startDate > a.startDate) ? -1 : 0));
+    currentPeriod = orderedPeriods[orderedPeriods.length-1];
     callback();
-  })
+
+  });
 }
 
 function loadBudgetChart() {
