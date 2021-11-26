@@ -1,3 +1,6 @@
+var currentPeriod;
+
+
 function convertDateTimeString(dateTimeString) {
     var date = new Date(dateTimeString);
     var dateDay = (date.getDate()).toString().padStart(2, '0');
@@ -65,3 +68,10 @@ function getMonthRangeByType(type) {
 
     return monthRange;
 }
+
+function setCurrentPeriod(callback) {
+    getLatestPeriod(function (latestPeriod) {
+      currentPeriod = latestPeriod;
+      callback();
+    });
+  }

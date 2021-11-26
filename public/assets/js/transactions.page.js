@@ -1,7 +1,6 @@
 var transactionsList = [];
 var periodsList;
 var transactionsTable;
-var currentPeriod;
 var reportsSelectedFilter = "filter-period";
 
 $(document).ready(function () {
@@ -164,7 +163,7 @@ function loadTransactionsToTableByMonthlyRange() {
                     }
                 });
             });
-            
+
         });
     });
 }
@@ -308,16 +307,6 @@ function verifyForm() {
     addTransactionForm.classList.add('was-validated');
 
     return formIsValid;
-}
-
-function setCurrentPeriod(callback) {
-
-    var currentDate = new Date();
-
-    getPeriodByDate(currentDate, function (period) {
-        currentPeriod = period;
-        callback();
-    });
 }
 
 function getPeriodsThatStartInARangeOMonths(startMonth, endMonth) {

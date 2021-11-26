@@ -1,5 +1,4 @@
 var categoriesList = [];
-var currentPeriod;
 var reportsSelectedFilter = "filter-month";
 var currentReportsChart;
 
@@ -22,7 +21,7 @@ function loadPage() {
     });
     setCurrentPeriod(function () {
       loadBudgetChart();
-    });   
+    });
   });
   loadReportsChart();
 }
@@ -75,16 +74,6 @@ function addCategorySummaryCard(categoryName, categoryBalance) {
   </div>`;
 
   $("#categorySummaryCards").append(categorySummaryCardTemplate);
-}
-
-function setCurrentPeriod(callback) {
-
-  var currentDate = new Date();
-
-  getPeriodByDate(currentDate, function (period) {
-    currentPeriod = period;
-    callback();
-  })
 }
 
 function loadBudgetChart() {
@@ -159,14 +148,14 @@ function loadReportsChart() {
 
   var periodsCount = 0;
 
-  getPeriodsThatStartInARangeOMonths(periodFilterRange.startMonth, periodFilterRange.endMonth, function(periods){
+  getPeriodsThatStartInARangeOMonths(periodFilterRange.startMonth, periodFilterRange.endMonth, function (periods) {
     periods.forEach(period => {
       getFinancialReport({ periodId: period.id }, function (financialReport) {
         var seriesValue = 0;
 
         var transactionsGroupedByDate = groupValuesByDate(financialReport.financialTransactions);
 
-        transactionsGroupedByDate.forEach(transaction =>{
+        transactionsGroupedByDate.forEach(transaction => {
 
           seriesValue += transaction.value;
 
@@ -178,45 +167,44 @@ function loadReportsChart() {
           });
         });
         periodsCount++;
-        if(periodsCount == periods.length){
+        if (periodsCount == periods.length) {
           seriesData.sort((a, b) => (a.x > b.x) ? 1 : ((b.x > a.x) ? -1 : 0));
 
-          if(currentReportsChart == null){
+          if (currentReportsChart == null) {
             initializeReportsChart(seriesData);
           }
-          else{
+          else {
             updateReportsChart(seriesData);
-          }      
+          }
         }
       });
     });
   });
 }
 
-function groupValuesByDate(transactions){
+function groupValuesByDate(transactions) {
   groupedTransactions = [];
   transactions.forEach(transaction => {
     var transactionIndex = groupedTransactions.findIndex(t => t.date == transaction.date);
 
-    if(transactionIndex >= 0){
-      if(transaction.isExpense == false){
+    if (transactionIndex >= 0) {
+      if (transaction.isExpense == false) {
         groupedTransactions[transactionIndex].value += transaction.value
       }
-      else{
+      else {
         groupedTransactions[transactionIndex].value -= transaction.value
-      }         
+      }
     }
-    else{
+    else {
       var transactionValue = 0;
-      
-      if(transaction.isExpense == false)
-      {
+
+      if (transaction.isExpense == false) {
         transactionValue = transaction.value;
       }
-      else{
+      else {
         transactionValue = 0 - transaction.value;
       }
-      
+
       groupedTransactions.push({
         date: transaction.date,
         value: transactionValue
@@ -268,7 +256,7 @@ function initializeReportsChart(seriesData) {
       curve: 'smooth',
       width: 2
     },
-    tooltip:{
+    tooltip: {
       theme: "dark"
     }
   });
@@ -276,7 +264,7 @@ function initializeReportsChart(seriesData) {
   currentReportsChart.render();
 }
 
-function updateReportsChart(seriesData){
+function updateReportsChart(seriesData) {
 
   currentReportsChart.updateSeries([{
     name: 'Balance',
