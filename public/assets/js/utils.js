@@ -69,9 +69,65 @@ function getMonthRangeByType(type) {
     return monthRange;
 }
 
+function getDateRangeByType(type) {
+    var currentDate = new Date();
+    var currentMonth = currentDate.getMonth() + 1;
+    var dateRange = { startDate: new Date(), endDate: new Date() }
+
+    if (type == "month") {
+        dateRange.startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        dateRange.endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+    }
+
+    if (type == "quarter") {
+
+        if (currentMonth <= 4) {
+            dateRange.startDate = new Date(currentDate.getFullYear(), 0, 1);
+            dateRange.endDate = new Date(currentDate.getFullYear(), 4, 0);
+        }
+        else if (currentMonth <= 8) {
+            dateRange.startDate = new Date(currentDate.getFullYear(), 4, 1);
+            dateRange.endDate = new Date(currentDate.getFullYear(), 8, 0);
+        }
+        else {
+            dateRange.startDate = new Date(currentDate.getFullYear(), 8, 1);
+            dateRange.endDate = new Date(currentDate.getFullYear() + 1, 0, 0);
+        }
+    }
+
+    if (type == "semester") {
+        if (currentMonth <= 6) {
+            dateRange.startDate = new Date(currentDate.getFullYear(), 0, 1);
+            dateRange.endDate = new Date(currentDate.getFullYear(), 7, 0);
+        }
+        else {
+            dateRange.startDate = new Date(currentDate.getFullYear(), 7, 1);
+            dateRange.endDate = new Date(currentDate.getFullYear() + 1, 0, 0);
+        }
+    }
+
+    if (type == "year") {
+        dateRange.startDate = new Date(currentDate.getFullYear(), 0, 1);
+        dateRange.endDate = new Date(currentDate.getFullYear() + 1, 0, 0);
+    }
+
+    return dateRange;
+
+}
+
 function setCurrentPeriod(callback) {
     getLatestPeriod(function (latestPeriod) {
-      currentPeriod = latestPeriod;
-      callback();
+        currentPeriod = latestPeriod;
+        callback();
     });
-  }
+}
+
+function convertDateToDotNetString(date) {
+    var dateDay = (date.getDate()).toString().padStart(2, '0');
+    var dateMonth = (date.getMonth() + 1).toString().padStart(2, '0');
+    var dateYear = date.getFullYear();
+
+    var formattedDateString = `${dateYear}-${dateMonth}-${dateDay}T00:00:00`;
+
+    return formattedDateString;
+}

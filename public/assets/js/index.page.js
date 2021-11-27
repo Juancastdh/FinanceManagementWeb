@@ -144,30 +144,33 @@ function loadReportsChart() {
 
   var seriesData = [];
 
-  var periodFilterRange = getMonthRangeByType(reportsSelectedFilter.replace("filter-", ""));
+  var financialReportFilter = getDateRangeByType(reportsSelectedFilter.replace("filter-", ""));
 
-  var periodsCount = 0;
+  var baseDate = new Date(financialReportFilter.startDate.getFullYear(), financialReportFilter.startDate.getMonth(), financialReportFilter.startDate.getDate() - 1);
 
-  getPeriodsThatStartInARangeOMonths(periodFilterRange.startMonth, periodFilterRange.endMonth, function (periods) {
-    periods.forEach(period => {
-      getFinancialReport({ periodId: period.id }, function (financialReport) {
-        var seriesValue = 0;
+  getFinancialReport({endDate: convertDateToDotNetString(baseDate)}, function(initialFinancialReport){
+    var seriesValue = initialFinancialReport.totalValue;
+    seriesValue = Math.round((seriesValue + Number.EPSILON) * 100) / 100;
+    seriesData.push({
+      y: seriesValue,
+      x: baseDate
+    });
+    getFinancialReport({startDate: convertDateToDotNetString(financialReportFilter.startDate), endDate: convertDateToDotNetString(financialReportFilter.endDate)}, function(financialReport){
+      var transactionsGroupedByDate = groupValuesByDate(financialReport.financialTransactions);
+      var transactionsProcessed = 0;
+      transactionsGroupedByDate.forEach(transaction => {
 
-        var transactionsGroupedByDate = groupValuesByDate(financialReport.financialTransactions);
+        seriesValue += transaction.value;
 
-        transactionsGroupedByDate.forEach(transaction => {
+        seriesValue = Math.round((seriesValue + Number.EPSILON) * 100) / 100;
 
-          seriesValue += transaction.value;
-
-          seriesValue = Math.round((seriesValue + Number.EPSILON) * 100) / 100;
-
-          seriesData.push({
-            y: seriesValue,
-            x: transaction.date
-          });
+        seriesData.push({
+          y: seriesValue,
+          x: transaction.date
         });
-        periodsCount++;
-        if (periodsCount == periods.length) {
+        transactionsProcessed++;
+
+        if(transactionsProcessed == transactionsGroupedByDate.length){
           seriesData.sort((a, b) => (a.x > b.x) ? 1 : ((b.x > a.x) ? -1 : 0));
 
           if (currentReportsChart == null) {
@@ -271,3 +274,5 @@ function updateReportsChart(seriesData) {
     data: seriesData
   }]);
 }
+
+

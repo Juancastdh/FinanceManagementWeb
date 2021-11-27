@@ -17,6 +17,14 @@ function getFinancialReport(parameters, callback){
         getFinancialReportUrl.searchParams.append("isExpense", parameters.isExpense);
     }
 
+    if(parameters.startDate != null){
+        getFinancialReportUrl.searchParams.append("startDate", parameters.startDate);
+    }
+
+    if(parameters.endDate != null){
+        getFinancialReportUrl.searchParams.append("endDate", parameters.endDate);
+    }
+
     $.get(getFinancialReportUrl.toString(), function (data) {
         callback(data);
         });
