@@ -150,6 +150,7 @@ function loadReportsChart() {
 
   getFinancialReport({endDate: convertDateToDotNetString(baseDate)}, function(initialFinancialReport){
     var seriesValue = initialFinancialReport.totalValue;
+    seriesValue = Math.round((seriesValue + Number.EPSILON) * 100) / 100;
     seriesData.push({
       y: seriesValue,
       x: baseDate
