@@ -35,16 +35,23 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine-dark.css";
 import "datatables.net-bs4";
 import $ from "jquery";
+import { periodsService } from "../services/periodsService.js";
+import { convertDateTimeString } from "../services/utils.js";
 
 export default {
   name: "PeriodsTable",
   components: {
 
   },
+  data() {
+    return {
+        periodsTable: null
+    }
+  },
   methods: {
-    init: function () {
-     $("#periodsTable").DataTable({
-        data: [],
+    init: function (periods) {
+     this.periodsTable = $("#periodsTable").DataTable({
+        data: periods,
         columns: [
           {
             data: "id",
@@ -62,22 +69,36 @@ export default {
           {
             data: "startDate",
             render: function (data) {
-              return data;
+              return convertDateTimeString(data);
             },
           },
           {
             data: "endDate",
             render: function (data) {
-              return data;
+              return convertDateTimeString(data);
             },
           },
         ],
       });
     },
+    refresh: function(){
+      this.clear();
+      this.reload();
+    },
+    clear: function(){
+      this.periodsTable.clear();
+    },
+    reload: function(){
+      periodsService.getPeriods.then(periods => { this.render(periods)});      
+    },
+    render: function(periods){
+      this.periodsTable.rows.add(periods);
+      this.periodsTable.draw();
+    }
   },
   mounted() {
-    this.init();
-  }
+    periodsService.getPeriods.then(periods => { this.init(periods)});
+  },
 };
 </script>
 
