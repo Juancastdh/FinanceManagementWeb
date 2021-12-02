@@ -45,7 +45,7 @@
               Submit
             </button>
             <div class="divider" />
-            <button type="reset" class="btn btn-secondary" id="resetButton">
+            <button type="reset" class="btn btn-secondary" id="resetButton" v-on:click="clearForm">
               Reset
             </button>
           </div>
