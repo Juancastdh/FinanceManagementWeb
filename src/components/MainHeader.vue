@@ -1,7 +1,7 @@
 <template>
   <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
-      <a href="#" class="logo d-flex align-items-center">
+      <a href="#" class="logo d-flex align-items-center" v-on:click="$emit('changed-active-option', 1)">
         <span class="d-none d-lg-block">Finance Management</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn" v-on:click="$emit('toggle-sidebar')"></i>
