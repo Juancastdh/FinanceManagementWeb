@@ -17,9 +17,17 @@ let deletePeriodById = function (periodId) {
     });
 }
 
+let addPeriod = function(period){
+    return new Promise((resolve) => {
+        let addPeriodUrl = `${baseUrl}/Periods`;
+        axios.post(addPeriodUrl, period).then(response => resolve(response.data));
+    });
+}
+
 let periodsService = {
     getPeriods: getPeriods,
-    deletePeriodById: deletePeriodById
+    deletePeriodById: deletePeriodById,
+    addPeriod: addPeriod
 };
 
 export {

@@ -112,6 +112,7 @@ export default {
           removedPeriods++;
           if (removedPeriods == selectedCheckboxes.length) {
             self.refresh();
+            $("#removeButton").prop("disabled", true);
           }
         });
       });

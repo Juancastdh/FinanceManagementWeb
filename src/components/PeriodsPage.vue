@@ -1,7 +1,7 @@
 <template>
   <div>
-    <PeriodsTable />
-    <AddPeriod />
+    <PeriodsTable ref="periodsTable"/>
+    <AddPeriod v-on:period-added="refreshPeriodsTable"/>
   </div>
 </template>
 
@@ -14,6 +14,11 @@ export default {
     components: {
         PeriodsTable,
         AddPeriod
+    },
+    methods: {
+      refreshPeriodsTable: function(){
+        this.$refs.periodsTable.refresh();
+      }
     }
 };
 </script>
