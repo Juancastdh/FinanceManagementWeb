@@ -1,6 +1,6 @@
 <template>
     <main id="main" class="main">
-        <PageTitle v-bind:title="activepage.title" v-on:go-to-dashboard="$emit('go-to-dashboard')"/>
+        <PageTitle v-on:go-to-dashboard="$emit('go-to-dashboard')"/>
         <PageContent v-bind:activepage="activepage"/>
     </main>
 </template>

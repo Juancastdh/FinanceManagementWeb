@@ -1,12 +1,12 @@
 <template>
   <div class="pagetitle">
-    <h1>{{ title }}</h1>
+    <h1>{{ $route.name }}</h1>
     <nav>
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a href="#" v-on:click="$emit('go-to-dashboard')">Home</a>
+          <router-link to="/">Home</router-link>
         </li>
-        <li class="breadcrumb-item active">{{ title }}</li>
+        <li class="breadcrumb-item active">{{ $route.name }}</li>
       </ol>
     </nav>
   </div>
@@ -15,6 +15,5 @@
 <script>
 export default {
   name: "PageTitle",
-  props: ["title"]
 };
 </script>

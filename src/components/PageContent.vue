@@ -2,7 +2,7 @@
   <section class="section">
     <div class="row">
       <div class="col-lg-12">
-        <component :is="activepage.component"/>
+        <router-view/>
       </div>
     </div>
   </section>
@@ -10,7 +10,6 @@
 
 <script>
 export default {
-  name: "PageContent",
-  props: ["activepage"]
+  name: "PageContent"
 };
 </script>
