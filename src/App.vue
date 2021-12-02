@@ -1,7 +1,7 @@
 <template>
   <MainHeader
     v-on:toggle-sidebar="onSidebarToggle"
-    v-on:changed-active-option="changeActiveOptionById"
+    v-on:go-to-dashboard="changeActiveOptionById(1)"
   />
   <Sidebar v-on:changed-active-option="changeActiveOption" v-bind:sidebaritems="pageOptions" />
   <Page v-bind:activepage="activePage" v-on:go-to-dashboard="changeActiveOptionById(1)" />
