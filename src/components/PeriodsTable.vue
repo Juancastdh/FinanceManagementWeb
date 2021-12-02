@@ -12,14 +12,14 @@
               <th scope="col">End Date</th>
             </tr>
           </thead>
-          <tbody>
-          </tbody>
+          <tbody></tbody>
         </table>
         <div class="text-left">
           <button
             type="button"
             class="btn btn-primary"
             id="removeButton"
+            v-on:click = "removeSelectedPeriods"
             disabled
           >
             Remove
@@ -31,8 +31,6 @@
 </template>
 
 <script>
-import "ag-grid-community/dist/styles/ag-grid.css";
-import "ag-grid-community/dist/styles/ag-theme-alpine-dark.css";
 import "datatables.net-bs4";
 import $ from "jquery";
 import { periodsService } from "../services/periodsService.js";
@@ -40,24 +38,16 @@ import { convertDateTimeString } from "../services/utils.js";
 
 export default {
   name: "PeriodsTable",
-  components: {
-
-  },
-  data() {
-    return {
-        periodsTable: null
-    }
-  },
   methods: {
     init: function (periods) {
-     this.periodsTable = $("#periodsTable").DataTable({
+     $("#periodsTable").DataTable({
         data: periods,
         columns: [
           {
             data: "id",
             render: function (data) {
               return (
-                '<input class="form-check-input me-1" name="cb" type="checkbox" value="aria-label="..."" id="cb' +
+                '<input class="form-check-input me-1" name="cb" type="checkbox" value="' +
                 data +
                 '">'
               );
@@ -80,24 +70,57 @@ export default {
           },
         ],
       });
+      this.addCheckboxBehavior();
     },
-    refresh: function(){
+    refresh: function () {
       this.clear();
       this.reload();
     },
-    clear: function(){
-      this.periodsTable.clear();
+    clear: function () {
+      var periodsTable = $("#periodsTable").DataTable();
+      periodsTable.clear();
     },
-    reload: function(){
-      periodsService.getPeriods.then(periods => { this.render(periods)});      
+    reload: function () {
+      periodsService.getPeriods().then((periods) => {
+        this.render(periods);
+      });
     },
-    render: function(periods){
-      this.periodsTable.rows.add(periods);
-      this.periodsTable.draw();
-    }
+    render: function (periods) {
+      var periodsTable = $("#periodsTable").DataTable();
+      periodsTable.rows.add(periods);
+      periodsTable.draw();
+      this.addCheckboxBehavior();
+    },
+    addCheckboxBehavior: function () {
+      $("input[name=cb]").change(function () {
+        var $boxes = $("input[name=cb]:checked");
+
+        if ($boxes.length > 0) {
+          $("#removeButton").prop("disabled", false);
+        } else {
+          $("#removeButton").prop("disabled", true);
+        }
+      });
+    },
+    removeSelectedPeriods: function () {
+      var selectedCheckboxes = $("input[name=cb]:checked");
+      var removedPeriods = 0;
+      var self = this;
+      selectedCheckboxes.each(function () {
+        var periodId = $(this).attr("value");
+        periodsService.deletePeriodById(periodId).then(() => {
+          removedPeriods++;
+          if (removedPeriods == selectedCheckboxes.length) {
+            self.refresh();
+          }
+        });
+      });
+    },
   },
   mounted() {
-    periodsService.getPeriods.then(periods => { this.init(periods)});
+    periodsService.getPeriods().then((periods) => {
+      this.init(periods);
+    });
   },
 };
 </script>

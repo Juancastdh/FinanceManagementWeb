@@ -1,4 +1,4 @@
-let baseUrl = "http://localhost:8080/api";
+let baseUrl = "https://localhost:7028/api";
 
 export {
     baseUrl

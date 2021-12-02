@@ -1,13 +1,25 @@
 import axios from "axios";
-import { baseUrl }  from "./config.js";
+import { baseUrl } from "./config.js";
 
-let getPeriods = new Promise((resolve) => {
-    let getPeriodsUrl = `${baseUrl}/Periods`;
-    axios.get(getPeriodsUrl).then(response => resolve(response.data));
-});
+let getPeriods = function () {
+
+    return new Promise((resolve) => {
+        let getPeriodsUrl = `${baseUrl}/Periods`;
+        axios.get(getPeriodsUrl).then(response => resolve(response.data));
+    });
+}
+
+let deletePeriodById = function (periodId) {
+
+    return new Promise((resolve) => {
+        let deletePeriodUrl = baseUrl + "/Periods/" + periodId;
+        axios.delete(deletePeriodUrl).then(response => resolve(response.data));
+    });
+}
 
 let periodsService = {
-    getPeriods: getPeriods
+    getPeriods: getPeriods,
+    deletePeriodById: deletePeriodById
 };
 
 export {
