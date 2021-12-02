@@ -10,6 +10,9 @@
 
 <script>
 import SidebarItem from "./SidebarItem.vue";
+import DashboardPage from "./DashboardPage.vue";
+import PeriodsPage from "./PeriodsPage.vue";
+import { shallowRef } from 'vue'
 
 export default {
   name: "Sidebar",
@@ -23,21 +26,25 @@ export default {
           id: 1,
           title: "Dashboard",
           isCollapsed: false,
+          component: shallowRef(DashboardPage)
         },
         {
           id: 2,
           title: "Periods",
           isCollapsed: true,
+          component: shallowRef(PeriodsPage)
         },
         {
           id: 3,
           title: "Transactions",
           isCollapsed: true,
+          component: shallowRef(DashboardPage)
         },
         {
           id: 4,
           title: "Categories",
           isCollapsed: true,
+          component: shallowRef(DashboardPage)
         },
       ],
     };
@@ -47,7 +54,7 @@ export default {
       this.sidebarItems.forEach((option) => {
         if (option.id == optionId) {
           option.isCollapsed = false;
-          this.activePage = option;
+          this.$emit("changed-active-option", option);
         } else {
           option.isCollapsed = true;
         }
