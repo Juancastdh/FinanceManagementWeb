@@ -11,6 +11,11 @@
                 class="form-control"
                 id="startDateField"
                 v-model="period.startDate"
+                v-bind:class="{
+                  'form-control': true,
+                  'is-invalid': !validStartDate() && attemptedToSubmit,
+                  'is-valid': validStartDate() && attemptedToSubmit,
+                }"
                 required
               />
               <label for="floatingName">Start Date</label>
@@ -26,11 +31,17 @@
                 class="form-control"
                 id="endDateField"
                 v-model="period.endDate"
+                v-bind:class="{
+                  'form-control': true,
+                  'is-invalid': !validEndDate() && attemptedToSubmit,
+                  'is-valid': validEndDate() && attemptedToSubmit,
+                }"
                 required
               />
               <label for="floatingName">End Date</label>
               <div class="invalid-feedback">
-                Please specify an end date for the period.
+                Please specify an end date that is later or equal to the start
+                date for the period.
               </div>
             </div>
           </div>
@@ -45,7 +56,12 @@
               Submit
             </button>
             <div class="divider" />
-            <button type="reset" class="btn btn-secondary" id="resetButton" v-on:click="clearForm">
+            <button
+              type="reset"
+              class="btn btn-secondary"
+              id="resetButton"
+              v-on:click="clearForm"
+            >
               Reset
             </button>
           </div>
@@ -66,6 +82,7 @@ export default {
         startDate: "",
         endDate: "",
       },
+      attemptedToSubmit: false,
     };
   },
   methods: {
@@ -74,14 +91,52 @@ export default {
     },
     addPeriod: function () {
       var self = this;
-      periodsService.addPeriod(self.period).then(() => {
-        self.$emit("period-added");
-        self.clearForm();
-      });
+      self.attemptedToSubmit = true;
+      if (self.isFormValid() == true) {
+        periodsService.addPeriod(self.period).then(() => {
+          self.$emit("period-added");
+          self.clearForm();
+        });
+      }
     },
     clearForm: function () {
+      this.attemptedToSubmit = false;
       this.period.startDate = "";
       this.period.endDate = "";
+    },
+    isFormValid: function () {
+      var formIsValid = false;
+
+      if (this.validStartDate() && this.validEndDate()) {
+        formIsValid = true;
+      }
+
+      return formIsValid;
+    },
+    validStartDate: function () {
+      var startDateIsValid = false;
+      if (this.period.startDate.length > 0) {
+        startDateIsValid = true;
+      }
+      return startDateIsValid;
+    },
+    validEndDate: function () {
+      var endDateIsValid = false;
+      if (this.period.endDate.length > 0 && this.validDates()) {
+        endDateIsValid = true;
+      }
+      return endDateIsValid;
+    },
+    validDates: function () {
+      var startDateTime = new Date(this.period.startDate);
+      var endDateTime = new Date(this.period.endDate);
+      var datesAreValid = false;
+
+      if (startDateTime <= endDateTime) {
+        datesAreValid = true;
+      }
+
+      return datesAreValid;
     },
   },
 };
