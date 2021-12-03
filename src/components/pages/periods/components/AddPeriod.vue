@@ -86,9 +86,6 @@ export default {
     };
   },
   methods: {
-    printData: function () {
-      console.log(this.period);
-    },
     addPeriod: function () {
       var self = this;
       self.attemptedToSubmit = true;
