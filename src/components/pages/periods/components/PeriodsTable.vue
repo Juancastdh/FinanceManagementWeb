@@ -34,7 +34,7 @@
 import "datatables.net-bs4";
 import $ from "jquery";
 import { periodsService } from "../../../../services/periodsService.js";
-import { convertDateTimeString } from "../../../../services/utils.js";
+import { convertDateTimeString } from "../../../../common/utils.js";
 
 export default {
   name: "PeriodsTable",

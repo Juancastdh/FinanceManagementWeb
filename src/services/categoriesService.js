@@ -1,5 +1,5 @@
 import axios from "axios";
-import { baseUrl } from "./config.js";
+import { baseUrl } from "../common/config.js";
 
 let getCategories = function(){
     return new Promise((resolve) => {
