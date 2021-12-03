@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import PeriodsTable from "./PeriodsTable.vue";
-import AddPeriod from "./AddPeriod.vue";
+import PeriodsTable from "./components/PeriodsTable.vue";
+import AddPeriod from "./components/AddPeriod.vue";
 
 export default {
     name: "PeriodsPage",

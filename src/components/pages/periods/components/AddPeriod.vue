@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { periodsService } from "../services/periodsService.js";
+import { periodsService } from "../../../../services/periodsService.js";
 
 export default {
   name: "AddPeriod",
