@@ -59,13 +59,12 @@
 import "datatables.net-bs4";
 import $ from "jquery";
 import { transactionsService } from "../../../../services/transactionsService.js";
-import { categoriesService } from "../../../../services/categoriesService.js";
 import { periodsService } from "../../../../services/periodsService.js";
 import {
   convertDateTimeString,
   monthRanges,
   getDateRangeByMonthRange,
-  convertDateToDotNetString
+  convertDateToDotNetString,
 } from "../../../../common/utils.js";
 
 var possibleFilters = [
@@ -97,9 +96,9 @@ var possibleFilters = [
 
 export default {
   name: "TransactionsTable",
+  props: ["categories"],
   data: function () {
     return {
-      categories: [],
       latestPeriod: null,
       filters: possibleFilters,
       currentFilter: possibleFilters[0],
@@ -220,17 +219,17 @@ export default {
         let monthRangeId = this.currentFilter.id.replace("filter-", "");
         let monthRange = monthRanges[monthRangeId];
         let dateRangeFilter = getDateRangeByMonthRange(monthRange);
-        return transactionsService.getFinancialReport(null, convertDateToDotNetString(dateRangeFilter.startDate), convertDateToDotNetString(dateRangeFilter.endDate));
+        return transactionsService.getFinancialReport(
+          null,
+          convertDateToDotNetString(dateRangeFilter.startDate),
+          convertDateToDotNetString(dateRangeFilter.endDate)
+        );
       }
     },
   },
   mounted() {
-    categoriesService
-      .getCategories()
-      .then((categories) => {
-        this.categories = categories;
-        return periodsService.getLatestPeriod()
-      })
+    periodsService
+      .getLatestPeriod()
       .then((period) => {
         this.latestPeriod = period;
         return this.getFinancialReportBasedOnCurrentFilter();

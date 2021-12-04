@@ -53,6 +53,7 @@
             >
               Submit
             </button>
+            <div class="divider" />
             <button
               type="reset"
               class="btn btn-secondary"
