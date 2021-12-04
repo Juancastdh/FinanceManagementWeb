@@ -23,11 +23,26 @@ let addTransaction = function(transaction){
     });
 }
 
+let getFinancialReport = function(periodId = null, startDate = null, endDate = null){
+    return new Promise((resolve) => {
+        let getFinancialReportUrl = `${baseUrl}/FinancialTransactions/FinancialReport`;
+        axios.request({
+            url: getFinancialReportUrl,
+            method: 'get',
+            params: {
+                periodId,
+                startDate,
+                endDate
+            }
+        } ).then(response => resolve(response.data));
+    });
+}
 
 let transactionsService = {
     getTransactions,
     deleteTransactionById,
-    addTransaction
+    addTransaction,
+    getFinancialReport
 };
 
 

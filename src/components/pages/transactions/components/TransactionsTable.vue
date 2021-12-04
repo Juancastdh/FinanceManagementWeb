@@ -10,14 +10,20 @@
             <h6>Filter</h6>
           </li>
           <li v-for="filter in filters" v-bind:key="filter.id">
-            <a class="dropdown-item" name="reports-filter" v-bind:id="filter.id" v-on:click="currentFilter = filter"
-              >{{filter.name}}</a>
+            <a
+              class="dropdown-item"
+              name="reports-filter"
+              v-bind:id="filter.id"
+              v-on:click="changeCurrentFilter(filter)"
+              >{{ filter.name }}</a
+            >
           </li>
         </ul>
       </div>
       <div class="card-body">
         <h5 class="card-title">
-          Transactions <span id="current-reports-filter">/{{currentFilter.name}}</span>
+          Transactions
+          <span id="current-reports-filter">/{{ currentFilter.name }}</span>
         </h5>
         <table class="table table-dark table-striped" id="transactionsTable">
           <thead>
@@ -54,43 +60,49 @@ import "datatables.net-bs4";
 import $ from "jquery";
 import { transactionsService } from "../../../../services/transactionsService.js";
 import { categoriesService } from "../../../../services/categoriesService.js";
-import { convertDateTimeString } from "../../../../common/utils.js";
+import { periodsService } from "../../../../services/periodsService.js";
+import {
+  convertDateTimeString,
+  monthRanges,
+  getDateRangeByMonthRange,
+  convertDateToDotNetString
+} from "../../../../common/utils.js";
 
 var possibleFilters = [
-        {
-          id: "filter-period",
-          name: "This Period",
-        },
-                {
-          id: "filter-month",
-          name: "This Month",
-        },
-                {
-          id: "filter-quarter",
-          name: "This Quarter",
-        },
-                {
-          id: "filter-semester",
-          name: "This Semester",
-        },
-                {
-          id: "filter-year",
-          name: "This Year",
-        },
-                {
-          id: "filter-none",
-          name: "All",
-        },
-      ];
-
+  {
+    id: "filter-period",
+    name: "This Period",
+  },
+  {
+    id: "filter-month",
+    name: "This Month",
+  },
+  {
+    id: "filter-quarter",
+    name: "This Quarter",
+  },
+  {
+    id: "filter-semester",
+    name: "This Semester",
+  },
+  {
+    id: "filter-year",
+    name: "This Year",
+  },
+  {
+    id: "filter-none",
+    name: "All",
+  },
+];
 
 export default {
   name: "TransactionsTable",
   data: function () {
     return {
       categories: [],
+      latestPeriod: null,
       filters: possibleFilters,
-      currentFilter: possibleFilters[0]
+      currentFilter: possibleFilters[0],
     };
   },
   methods: {
@@ -156,8 +168,8 @@ export default {
       transactionsTable.clear();
     },
     reload: function () {
-      transactionsService.getTransactions().then((transactions) => {
-        this.render(transactions);
+      this.getFinancialReportBasedOnCurrentFilter().then((financialReport) => {
+        this.render(financialReport.financialTransactions);
       });
     },
     render: function (transactions) {
@@ -195,14 +207,37 @@ export default {
     getCategoryById: function (categoryId) {
       return this.categories.find((category) => category.id == categoryId);
     },
+    changeCurrentFilter: function (filter) {
+      this.currentFilter = filter;
+      this.refresh();
+    },
+    getFinancialReportBasedOnCurrentFilter: function () {
+      if (this.currentFilter.id == "filter-period") {
+        return transactionsService.getFinancialReport(this.latestPeriod.id);
+      } else if (this.currentFilter.id == "filter-none") {
+        return transactionsService.getFinancialReport();
+      } else {
+        let monthRangeId = this.currentFilter.id.replace("filter-", "");
+        let monthRange = monthRanges[monthRangeId];
+        let dateRangeFilter = getDateRangeByMonthRange(monthRange);
+        return transactionsService.getFinancialReport(null, convertDateToDotNetString(dateRangeFilter.startDate), convertDateToDotNetString(dateRangeFilter.endDate));
+      }
+    },
   },
   mounted() {
-    categoriesService.getCategories().then((categories) => {
-      this.categories = categories;
-      transactionsService.getTransactions().then((transactions) => {
-        this.init(transactions);
+    categoriesService
+      .getCategories()
+      .then((categories) => {
+        this.categories = categories;
+        return periodsService.getLatestPeriod()
+      })
+      .then((period) => {
+        this.latestPeriod = period;
+        return this.getFinancialReportBasedOnCurrentFilter();
+      })
+      .then((financialReport) => {
+        this.init(financialReport.financialTransactions);
       });
-    });
   },
 };
 </script>
