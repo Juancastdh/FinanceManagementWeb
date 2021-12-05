@@ -255,7 +255,7 @@ export default {
       return typeIsValid;
     },
     getSelectedPeriod() {
-      var date = new Date(this.transaction.date);
+      var date = new Date(this.transaction.date + "T00:00:00");
       return this.periods.find(
         (p) => date >= new Date(p.startDate) && date < new Date(p.endDate)
       );
