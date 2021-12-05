@@ -70,23 +70,23 @@ import {
 var possibleFilters = [
   {
     id: "filter-period",
-    name: "This Period",
+    name: "Last Period",
   },
   {
     id: "filter-month",
-    name: "This Month",
+    name: "Last Month",
   },
   {
     id: "filter-quarter",
-    name: "This Quarter",
+    name: "Last Quarter",
   },
   {
     id: "filter-semester",
-    name: "This Semester",
+    name: "Last Semester",
   },
   {
     id: "filter-year",
-    name: "This Year",
+    name: "Last Year",
   },
   {
     id: "filter-none",
