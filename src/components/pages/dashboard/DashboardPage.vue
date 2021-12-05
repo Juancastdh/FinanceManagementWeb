@@ -1,10 +1,10 @@
 <template>
   <section class="section dashboard">
     <div class="row">
-      <div class="col-lg-8">
-        <CategoryBalanceSection /><ReportsChartSection />
+      <div class="col-lg-12">
+        <CategoryBalanceSection />
+        <ReportsChartSection />
       </div>
-      <div class="col-lg-4"></div>
     </div>
   </section>
 </template>
