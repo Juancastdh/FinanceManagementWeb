@@ -1,7 +1,9 @@
 <template>
   <section class="section dashboard">
     <div class="row">
-      <div class="col-lg-8"><CategoryBalanceSection /></div>
+      <div class="col-lg-8">
+        <CategoryBalanceSection /><ReportsChartSection />
+      </div>
       <div class="col-lg-4"></div>
     </div>
   </section>
@@ -9,12 +11,13 @@
 
 <script>
 import CategoryBalanceSection from "./components/CategoryBalanceSection.vue";
-
+import ReportsChartSection from "./components/ReportsChartSection.vue";
 
 export default {
   name: "DashboardPage",
   components: {
-      CategoryBalanceSection
-  }
+    CategoryBalanceSection,
+    ReportsChartSection,
+  },
 };
 </script>
