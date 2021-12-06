@@ -199,6 +199,7 @@ export default {
       this.transaction.date = "";
       this.transaction.value = null;
       this.transaction.description = "";
+      this.transaction.isExpense = null;
     },
     isFormValid: function () {
       var formIsValid = false;
