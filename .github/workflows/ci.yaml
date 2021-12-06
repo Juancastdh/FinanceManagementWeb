@@ -50,4 +50,4 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/financemanagement:app
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/financemanagement:appv2
