@@ -22,6 +22,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: npm ci
+      - name: Build
+        run: npm run build
 
   push_to_registry:
     needs: build
@@ -48,4 +50,4 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/financemanagement:app
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/financemanagement:appv2
