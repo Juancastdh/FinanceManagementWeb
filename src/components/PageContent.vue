@@ -3,9 +3,7 @@
     <div class="row">
       <div class="col-lg-12">
         <router-view v-slot="{ Component }">
-          <keep-alive>
-            <component :is="Component" :key="$route.fullPath"></component>
-          </keep-alive>
+          <component :is="Component" :key="$route.fullPath"></component>
         </router-view>
       </div>
     </div>
@@ -14,6 +12,6 @@
 
 <script>
 export default {
-  name: "PageContent"
+  name: "PageContent",
 };
 </script>
