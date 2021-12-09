@@ -19,8 +19,8 @@
             type="button"
             class="btn btn-primary"
             id="removeButton"
-            v-on:click = "removeSelectedPeriods"
-            disabled
+            v-on:click="removeSelectedPeriods"
+            :disabled="!removeButtonEnabled"
           >
             Remove
           </button>
@@ -38,20 +38,32 @@ import { convertDateTimeString } from "../../../../common/utils.js";
 
 export default {
   name: "PeriodsTable",
+  data: function () {
+    return {
+      removeButtonEnabled: false,
+      periodsTable: null,
+    };
+  },
   methods: {
     init: function (periods) {
-     $("#periodsTable").DataTable({
+      var self = this;
+      self.periodsTable = $("#periodsTable").DataTable({
+        columnDefs: [
+          {
+            targets: 0,
+            checkboxes: {
+              selectRow: true,
+            },
+          },
+        ],
+        select: {
+          style: "multi",
+        },
+        order: [[1, "asc"]],
         data: periods,
         columns: [
           {
             data: "id",
-            render: function (data) {
-              return (
-                '<input class="form-check-input me-1" name="cb" type="checkbox" value="' +
-                data +
-                '">'
-              );
-            },
           },
           {
             data: "id",
@@ -70,15 +82,21 @@ export default {
           },
         ],
       });
-      this.addCheckboxBehavior();
+      self.periodsTable.on("select", function () {
+        self.enableRemoveButton();
+      });
+      self.periodsTable.on("deselect", function () {
+        self.enableRemoveButton();
+      });
     },
     refresh: function () {
+      this.deselectAllRows();
       this.clear();
       this.reload();
+      this.enableRemoveButton();
     },
     clear: function () {
-      var periodsTable = $("#periodsTable").DataTable();
-      periodsTable.clear();
+      this.periodsTable.clear();
     },
     reload: function () {
       periodsService.getPeriods().then((periods) => {
@@ -86,36 +104,41 @@ export default {
       });
     },
     render: function (periods) {
-      var periodsTable = $("#periodsTable").DataTable();
-      periodsTable.rows.add(periods);
-      periodsTable.draw();
-      this.addCheckboxBehavior();
-    },
-    addCheckboxBehavior: function () {
-      $("input[name=cb]").change(function () {
-        var $boxes = $("input[name=cb]:checked");
-
-        if ($boxes.length > 0) {
-          $("#removeButton").prop("disabled", false);
-        } else {
-          $("#removeButton").prop("disabled", true);
-        }
-      });
+      this.periodsTable.rows.add(periods);
+      this.periodsTable.draw();
     },
     removeSelectedPeriods: function () {
-      var selectedCheckboxes = $("input[name=cb]:checked");
-      var removedPeriods = 0;
       var self = this;
-      selectedCheckboxes.each(function () {
-        var periodId = $(this).attr("value");
-        periodsService.deletePeriodById(periodId).then(() => {
+      var selectedPeriods = self.periodsTable.rows({ selected: true }).data();
+      var removedPeriods = 0;
+      selectedPeriods.each(function (period) {
+        periodsService.deletePeriodById(period.id).then(() => {
           removedPeriods++;
-          if (removedPeriods == selectedCheckboxes.length) {
+          if (removedPeriods == selectedPeriods.length) {
             self.refresh();
-            $("#removeButton").prop("disabled", true);
           }
         });
       });
+    },
+    anyPeriodsSelected: function () {
+      var anyPeriodsSelected = false;
+      var selectedPeriods = this.periodsTable
+        .rows({ selected: true })
+        .data();
+      if (selectedPeriods.length > 0) {
+        anyPeriodsSelected = true;
+      }
+      return anyPeriodsSelected;
+    },
+    enableRemoveButton: function () {
+      if (this.anyPeriodsSelected()) {
+        this.removeButtonEnabled = true;
+      } else {
+        this.removeButtonEnabled = false;
+      }
+    },
+    deselectAllRows: function () {
+      this.periodsTable.rows({ selected: true }).deselect();
     },
   },
   mounted() {

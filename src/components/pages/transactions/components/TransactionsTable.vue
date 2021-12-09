@@ -248,7 +248,7 @@ export default {
       }
     },
     deselectAllRows: function () {
-      this.categoriesTable.rows({ selected: true }).deselect();
+      this.transactionsTable.rows({ selected: true }).deselect();
     },
   },
   mounted() {
