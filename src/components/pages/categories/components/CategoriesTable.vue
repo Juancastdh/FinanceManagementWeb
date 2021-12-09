@@ -20,7 +20,7 @@
             class="btn btn-primary"
             id="removeButton"
             v-on:click="removeSelectedCategories"
-            disabled
+            :disabled="!removeButtonEnabled"
           >
             Remove
           </button>
@@ -32,25 +32,39 @@
 
 <script>
 import "datatables.net-bs4";
+import "datatables.net-select-bs4";
+import "jquery-datatables-checkboxes";
 import $ from "jquery";
 import { categoriesService } from "../../../../services/categoriesService.js";
 
 export default {
   name: "CategoriesTable",
+  data: function () {
+    return {
+      removeButtonEnabled: false,
+      categoriesTable: null,
+    };
+  },
   methods: {
     init: function (categories) {
-      $("#categoriesTable").DataTable({
+      var self = this;
+      self.categoriesTable = $("#categoriesTable").DataTable({
+        columnDefs: [
+          {
+            targets: 0,
+            checkboxes: {
+              selectRow: true,
+            },
+          },
+        ],
+        select: {
+          style: "multi",
+        },
+        order: [[1, "asc"]],
         data: categories,
         columns: [
           {
             data: "id",
-            render: function (data) {
-              return (
-                '<input class="form-check-input me-1" name="cb" type="checkbox" value="' +
-                data +
-                '">'
-              );
-            },
           },
           {
             data: "id",
@@ -66,15 +80,21 @@ export default {
           },
         ],
       });
-      this.addCheckboxBehavior();
+      self.categoriesTable.on("select", function () {
+        self.enableRemoveButton();
+      });
+      self.categoriesTable.on("deselect", function () {
+        self.enableRemoveButton();
+      });
     },
     refresh: function () {
+      this.deselectAllRows();
       this.clear();
       this.reload();
+      this.enableRemoveButton();
     },
     clear: function () {
-      var categoriesTable = $("#categoriesTable").DataTable();
-      categoriesTable.clear();
+      this.categoriesTable.clear();
     },
     reload: function () {
       categoriesService.getCategories().then((categories) => {
@@ -82,36 +102,43 @@ export default {
       });
     },
     render: function (categories) {
-      var categoriesTable = $("#categoriesTable").DataTable();
-      categoriesTable.rows.add(categories);
-      categoriesTable.draw();
-      this.addCheckboxBehavior();
-    },
-    addCheckboxBehavior: function () {
-      $("input[name=cb]").change(function () {
-        var $boxes = $("input[name=cb]:checked");
-
-        if ($boxes.length > 0) {
-          $("#removeButton").prop("disabled", false);
-        } else {
-          $("#removeButton").prop("disabled", true);
-        }
-      });
+      this.categoriesTable.rows.add(categories);
+      this.categoriesTable.draw();
     },
     removeSelectedCategories: function () {
-      var selectedCheckboxes = $("input[name=cb]:checked");
-      var removedCategories = 0;
       var self = this;
-      selectedCheckboxes.each(function () {
-        var categoryId = $(this).attr("value");
-        categoriesService.deleteCategoryById(categoryId).then(() => {
+      var selectedCategories = self.categoriesTable
+        .rows({ selected: true })
+        .data();
+      var removedCategories = 0;
+      selectedCategories.each(function (category) {
+        categoriesService.deleteCategoryById(category.id).then(() => {
           removedCategories++;
-          if (removedCategories == selectedCheckboxes.length) {
+          if (removedCategories == selectedCategories.length) {
             self.refresh();
-            $("#removeButton").prop("disabled", true);
           }
         });
       });
+    },
+    anyCategoriesSelected: function () {
+      var anyCategoriesSelected = false;
+      var selectedCategories = this.categoriesTable
+        .rows({ selected: true })
+        .data();
+      if (selectedCategories.length > 0) {
+        anyCategoriesSelected = true;
+      }
+      return anyCategoriesSelected;
+    },
+    enableRemoveButton: function () {
+      if (this.anyCategoriesSelected()) {
+        this.removeButtonEnabled = true;
+      } else {
+        this.removeButtonEnabled = false;
+      }
+    },
+    deselectAllRows: function () {
+      this.categoriesTable.rows({ selected: true }).deselect();
     },
   },
   mounted() {

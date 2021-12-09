@@ -105,28 +105,30 @@ export default {
       filters: possibleFilters,
       currentFilter: possibleFilters[0],
       removeButtonEnabled: false,
-      transactionsTable: null
+      transactionsTable: null,
     };
   },
   methods: {
     init: function (transactions) {
       var self = this;
       self.transactionsTable = $("#transactionsTable").DataTable({
-        columnDefs: [{
-          targets: 0,
-          checkboxes: {
-            selectRow: true
-          }
-        }],
+        columnDefs: [
+          {
+            targets: 0,
+            checkboxes: {
+              selectRow: true,
+            },
+          },
+        ],
         select: {
-          style: 'multi'
+          style: "multi",
         },
-        order: [[1, 'asc']],
+        order: [[1, "asc"]],
         data: transactions,
-        
+
         columns: [
           {
-            data: "id"
+            data: "id",
           },
           {
             data: "id",
@@ -165,15 +167,15 @@ export default {
         ],
       });
 
-      self.transactionsTable.on('select', function(){
+      self.transactionsTable.on("select", function () {
         self.enableRemoveButton();
       });
-      self.transactionsTable.on('deselect', function(){
+      self.transactionsTable.on("deselect", function () {
         self.enableRemoveButton();
       });
-
     },
     refresh: function () {
+      this.deselectAllRows();
       this.clear();
       this.reload();
       this.enableRemoveButton();
@@ -192,7 +194,9 @@ export default {
     },
     removeSelectedTransactions: function () {
       var self = this;
-      var selectedTransactions = self.transactionsTable.rows({selected: true}).data();
+      var selectedTransactions = self.transactionsTable
+        .rows({ selected: true })
+        .data();
       var removedTransactions = 0;
       selectedTransactions.each(function (transaction) {
         transactionsService.deleteTransactionById(transaction.id).then(() => {
@@ -226,22 +230,26 @@ export default {
         );
       }
     },
-    anyTransactionsSelected: function() {
+    anyTransactionsSelected: function () {
       var anyTransactionsSelected = false;
-      var selectedTransactions = this.transactionsTable.rows({selected: true}).data();
-      if(selectedTransactions.length > 0){
+      var selectedTransactions = this.transactionsTable
+        .rows({ selected: true })
+        .data();
+      if (selectedTransactions.length > 0) {
         anyTransactionsSelected = true;
       }
       return anyTransactionsSelected;
     },
-    enableRemoveButton: function(){
-      if(this.anyTransactionsSelected()){
+    enableRemoveButton: function () {
+      if (this.anyTransactionsSelected()) {
         this.removeButtonEnabled = true;
-      }
-      else{
+      } else {
         this.removeButtonEnabled = false;
       }
-    }
+    },
+    deselectAllRows: function () {
+      this.categoriesTable.rows({ selected: true }).deselect();
+    },
   },
   mounted() {
     periodsService
