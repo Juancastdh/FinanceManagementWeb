@@ -45,7 +45,7 @@
             class="btn btn-primary"
             id="removeButton"
             v-on:click="removeSelectedTransactions"
-            disabled
+            :disabled="!removeButtonEnabled"
           >
             Remove
           </button>
@@ -57,6 +57,8 @@
 
 <script>
 import "datatables.net-bs4";
+import "datatables.net-select-bs4";
+import "jquery-datatables-checkboxes";
 import $ from "jquery";
 import { transactionsService } from "../../../../services/transactionsService.js";
 import { periodsService } from "../../../../services/periodsService.js";
@@ -102,23 +104,31 @@ export default {
       latestPeriod: null,
       filters: possibleFilters,
       currentFilter: possibleFilters[0],
+      removeButtonEnabled: false,
+      transactionsTable: null,
     };
   },
   methods: {
     init: function (transactions) {
       var self = this;
-      $("#transactionsTable").DataTable({
+      self.transactionsTable = $("#transactionsTable").DataTable({
+        columnDefs: [
+          {
+            targets: 0,
+            checkboxes: {
+              selectRow: true,
+            },
+          },
+        ],
+        select: {
+          style: "multi",
+        },
+        order: [[1, "asc"]],
         data: transactions,
+
         columns: [
           {
             data: "id",
-            render: function (data) {
-              return (
-                '<input class="form-check-input me-1" name="cb" type="checkbox" value="' +
-                data +
-                '">'
-              );
-            },
           },
           {
             data: "id",
@@ -156,15 +166,22 @@ export default {
           },
         ],
       });
-      this.addCheckboxBehavior();
+
+      self.transactionsTable.on("select", function () {
+        self.enableRemoveButton();
+      });
+      self.transactionsTable.on("deselect", function () {
+        self.enableRemoveButton();
+      });
     },
     refresh: function () {
+      this.deselectAllRows();
       this.clear();
       this.reload();
+      this.enableRemoveButton();
     },
     clear: function () {
-      var transactionsTable = $("#transactionsTable").DataTable();
-      transactionsTable.clear();
+      this.transactionsTable.clear();
     },
     reload: function () {
       this.getFinancialReportBasedOnCurrentFilter().then((financialReport) => {
@@ -172,33 +189,20 @@ export default {
       });
     },
     render: function (transactions) {
-      var transactionsTable = $("#transactionsTable").DataTable();
-      transactionsTable.rows.add(transactions);
-      transactionsTable.draw();
-      this.addCheckboxBehavior();
-    },
-    addCheckboxBehavior: function () {
-      $("input[name=cb]").change(function () {
-        var $boxes = $("input[name=cb]:checked");
-
-        if ($boxes.length > 0) {
-          $("#removeButton").prop("disabled", false);
-        } else {
-          $("#removeButton").prop("disabled", true);
-        }
-      });
+      this.transactionsTable.rows.add(transactions);
+      this.transactionsTable.draw();
     },
     removeSelectedTransactions: function () {
-      var selectedCheckboxes = $("input[name=cb]:checked");
-      var removedTransactions = 0;
       var self = this;
-      selectedCheckboxes.each(function () {
-        var transactionId = $(this).attr("value");
-        transactionsService.deleteTransactionById(transactionId).then(() => {
+      var selectedTransactions = self.transactionsTable
+        .rows({ selected: true })
+        .data();
+      var removedTransactions = 0;
+      selectedTransactions.each(function (transaction) {
+        transactionsService.deleteTransactionById(transaction.id).then(() => {
           removedTransactions++;
-          if (removedTransactions == selectedCheckboxes.length) {
+          if (removedTransactions == selectedTransactions.length) {
             self.refresh();
-            $("#removeButton").prop("disabled", true);
           }
         });
       });
@@ -225,6 +229,26 @@ export default {
           convertDateToDotNetString(dateRangeFilter.endDate)
         );
       }
+    },
+    anyTransactionsSelected: function () {
+      var anyTransactionsSelected = false;
+      var selectedTransactions = this.transactionsTable
+        .rows({ selected: true })
+        .data();
+      if (selectedTransactions.length > 0) {
+        anyTransactionsSelected = true;
+      }
+      return anyTransactionsSelected;
+    },
+    enableRemoveButton: function () {
+      if (this.anyTransactionsSelected()) {
+        this.removeButtonEnabled = true;
+      } else {
+        this.removeButtonEnabled = false;
+      }
+    },
+    deselectAllRows: function () {
+      this.transactionsTable.rows({ selected: true }).deselect();
     },
   },
   mounted() {
