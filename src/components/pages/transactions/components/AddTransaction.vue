@@ -63,6 +63,8 @@
               <div class="invalid-feedback">Please specify a value.</div>
             </div>
           </div>
+
+
           <div class="col-md-6">
             <div class="form-floating mb-3">
               <select
@@ -72,9 +74,9 @@
                 v-model="transaction.categoryId"
                 v-bind:class="{
                   'is-invalid': !validCategory() && attemptedToSubmit,
-                  'is-valid': validCategory() && attemptedToSubmit,
+                  'is-valid': validCategory() && attemptedToSubmit
                 }"
-                required
+                :disabled = "isSplitIntoCategoriesSelected()"
               >
                 <option
                   v-for="category in categories"
@@ -87,6 +89,49 @@
               <label for="categoryCombobox">Category</label>
               <div class="invalid-feedback">
                 Please specify a valid category.
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <legend class="col-form-label col-sm-2 pt-0">Split into all categories?</legend>
+            <div class="col-sm-6">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="splitRadios"
+                  value="true"
+                  id="splitIntoAllCategories"
+                  v-model="splitIntoCategories"
+                  v-bind:class="{
+                    'is-invalid': !validSplitOption() && attemptedToSubmit,
+                    'is-valid': validSplitOption() && attemptedToSubmit
+                  }"
+                  required
+                />
+                <label class="form-check-label" for="splitIntoAllCategories">
+                  Yes
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="splitRadios"
+                  value="false"
+                  id="doNotSplitIntoAllCategories"
+                  v-model="splitIntoCategories"
+                  v-bind:class="{
+                    'is-invalid': !validSplitOption() && attemptedToSubmit,
+                    'is-valid': validSplitOption() && attemptedToSubmit,
+                  }"
+                  required
+                />
+                <label class="form-check-label" for="doNotSplitIntoAllCategories">
+                  No
+                </label>
+                <div class="invalid-feedback">Please select an option</div>
               </div>
             </div>
           </div>
@@ -177,6 +222,7 @@ export default {
         periodId: null,
       },
       attemptedToSubmit: false,
+      splitIntoCategories: false,
       periods: [],
     };
   },
@@ -184,15 +230,46 @@ export default {
     addTransaction: function () {
       var self = this;
       self.attemptedToSubmit = true;
+      var transactionsToBeAdded = self.getTransactionsToBeAdded();
+      var transactionPromises = [];
+
+      if(transactionsToBeAdded.length > 0){
+        transactionsToBeAdded.forEach(function(transaction){
+          transactionPromises.push(transactionsService.addTransaction(transaction));
+        });
+
+        Promise.all(transactionPromises).then(() => {
+          self.$emit("transaction-added");
+          self.clearForm();
+        });
+      }     
+
+
+    },
+    getTransactionsToBeAdded: function (){
+      var self = this;
+      var transactionsToBeAdded = [];
       if (self.isFormValid() == true) {
         var selectedPeriod = this.getSelectedPeriod();
         self.transaction.periodId = selectedPeriod.id;
         self.transaction.isExpense = (self.transaction.isExpense === 'true');
-        transactionsService.addTransaction(self.transaction).then(() => {
-          self.$emit("transaction-added");
-          self.clearForm();
-        });
+      
+        if (self.splitIntoCategories == false){
+          transactionsToBeAdded.push(self.transaction);
+        }
+        else {
+          var categories = self.$props.categories;
+          categories.forEach(function(category){
+            var categoryTransaction = {};
+            Object.assign(categoryTransaction, self.transaction);
+            categoryTransaction.categoryId = category.id;
+            categoryTransaction.value = categoryTransaction.value * (category.percentage/100);
+            transactionsToBeAdded.push(categoryTransaction);
+          });
+        }
       }
+
+      return transactionsToBeAdded;
     },
     clearForm: function () {
       this.attemptedToSubmit = false;
@@ -200,6 +277,7 @@ export default {
       this.transaction.value = null;
       this.transaction.description = "";
       this.transaction.isExpense = null;
+      this.splitIntoCategories = false;
     },
     isFormValid: function () {
       var formIsValid = false;
@@ -209,7 +287,8 @@ export default {
         this.validValue() &&
         this.validDescription() &&
         this.validCategory() &&
-        this.validType()
+        this.validType() &&
+        this.validSplitOption()
       ) {
         formIsValid = true;
       }
@@ -242,9 +321,10 @@ export default {
     },
     validCategory: function () {
       var categoryIsValid = false;
-      if (this.transaction.categoryId != null) {
+      if (this.transaction.categoryId != null || this.isSplitIntoCategoriesSelected() == true) {
         categoryIsValid = true;
       }
+
       return categoryIsValid;
     },
     validType: function () {
@@ -254,12 +334,28 @@ export default {
       }
       return typeIsValid;
     },
+    validSplitOption: function () {
+      var splitOptionIsValid = false;
+      if (this.splitIntoCategories != null) {
+        splitOptionIsValid = true;
+      }
+      return splitOptionIsValid;
+    },
     getSelectedPeriod() {
       var date = new Date(this.transaction.date + "T00:00:00");
       return this.periods.find(
         (p) => date >= new Date(p.startDate) && date < new Date(p.endDate)
       );
     },
+    isSplitIntoCategoriesSelected: function(){
+
+      var isSplitIntoCategoriesSelected = false;
+      if(this.splitIntoCategories == "true"){
+        isSplitIntoCategoriesSelected = true;
+      }
+
+      return isSplitIntoCategoriesSelected;
+    }
   },
   mounted() {
     var self = this;
