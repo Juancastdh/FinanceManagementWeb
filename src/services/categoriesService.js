@@ -23,11 +23,19 @@ let addCategory = function(category){
     });
 }
 
+let updateCategory = function(category){
+    return new Promise((resolve) => {
+        let updateCategoryUrl = `${baseUrl}/Categories`;
+        axios.put(updateCategoryUrl, category).then(response => resolve(response.data));
+    });
+}
+
 
 let categoriesService = {
     getCategories,
     deleteCategoryById,
-    addCategory
+    addCategory,
+    updateCategory
 };
 
 

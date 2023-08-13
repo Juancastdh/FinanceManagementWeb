@@ -14,17 +14,32 @@
           </thead>
           <tbody></tbody>
         </table>
-        <div class="text-left">
-          <button
-            type="button"
-            class="btn btn-primary"
-            id="removeButton"
-            v-on:click="removeSelectedCategories"
-            :disabled="!removeButtonEnabled"
-          >
-            Remove
-          </button>
-        </div>
+
+        <button class="btn btn-primary" type="button" data-bs-toggle="dropdown">
+          Actions
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+          <li>
+            <a
+              class="dropdown-item"
+              v-bind:class= "{ disabled: !editButtonEnabled}"
+              id="editButton"
+              v-on:click="editSelectedCategory"
+            >
+              Edit
+            </a>
+          </li>
+          <li>
+            <a
+              class="dropdown-item"
+              v-bind:class= "{ disabled: !removeButtonEnabled}"
+              id="removeButton"
+              v-on:click="removeSelectedCategories"
+            >
+              Remove
+            </a>
+          </li>         
+        </ul>
       </div>
     </div>
   </div>
@@ -42,6 +57,7 @@ export default {
   data: function () {
     return {
       removeButtonEnabled: false,
+      editButtonEnabled: false,
       categoriesTable: null,
     };
   },
@@ -77,14 +93,16 @@ export default {
             render: function (data) {
               return data + "%";
             },
-          },
+          }
         ],
       });
       self.categoriesTable.on("select", function () {
         self.enableRemoveButton();
+        self.enableEditButton();
       });
       self.categoriesTable.on("deselect", function () {
         self.enableRemoveButton();
+        self.enableEditButton();
       });
     },
     refresh: function () {
@@ -92,6 +110,7 @@ export default {
       this.clear();
       this.reload();
       this.enableRemoveButton();
+      this.enableEditButton();
     },
     clear: function () {
       this.categoriesTable.clear();
@@ -120,6 +139,16 @@ export default {
         });
       });
     },
+    editSelectedCategory: function() {
+
+      var self = this;
+      var selectedCategories = self.categoriesTable
+        .rows({ selected: true })
+        .data();
+      selectedCategories.each(function (category){
+        self.$emit("category-edited", category);
+      });      
+    },
     anyCategoriesSelected: function () {
       var anyCategoriesSelected = false;
       var selectedCategories = this.categoriesTable
@@ -130,11 +159,28 @@ export default {
       }
       return anyCategoriesSelected;
     },
+    oneCategorySelected: function(){
+      var oneCategorySelected = false;
+      var selectedCategories = this.categoriesTable
+        .rows({ selected: true })
+        .data();
+      if (selectedCategories.length == 1) {
+        oneCategorySelected = true;
+      }
+      return oneCategorySelected;
+    },
     enableRemoveButton: function () {
       if (this.anyCategoriesSelected()) {
         this.removeButtonEnabled = true;
       } else {
         this.removeButtonEnabled = false;
+      }
+    },
+    enableEditButton: function () {
+      if (this.oneCategorySelected()) {
+        this.editButtonEnabled = true;
+      } else {
+        this.editButtonEnabled = false;
       }
     },
     deselectAllRows: function () {

@@ -79,25 +79,37 @@ export default {
       category: {
         name: "",
         percentage: 0,
+        id: null
       },
-      attemptedToSubmit: false,
+      attemptedToSubmit: false
     };
   },
+
   methods: {
     addCategory: function () {
       var self = this;
       self.attemptedToSubmit = true;
       if (self.isFormValid() == true) {
-        categoriesService.addCategory(self.category).then(() => {
-          self.$emit("category-added");
-          self.clearForm();
-        });
+        if(self.category.id == null){
+          categoriesService.addCategory(self.category).then(() => {
+            self.$emit("category-added");
+            self.clearForm();
+          });
+        } 
+        else {
+          categoriesService.updateCategory(self.category).then(() => {
+            self.$emit("category-added");
+            self.clearForm();
+          });
+        }
+
       }
     },
     clearForm: function () {
       this.attemptedToSubmit = false;
       this.category.name = "";
       this.category.percentage = "";
+      this.category.id = null;
     },
     isFormValid: function () {
       var formIsValid = false;
@@ -122,6 +134,9 @@ export default {
       }
       return percentageIsValid;
     },
+    setCategory: function(category){
+      this.category = category;
+    }
   },
 };
 </script>
