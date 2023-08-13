@@ -1,7 +1,7 @@
 <template>
   <div>
-    <CategoriesTable ref="categoriesTable" />
-    <AddCategory v-on:category-added="refreshCategoriesTable"/>
+    <CategoriesTable ref="categoriesTable" v-on:category-edited="setCategoryToEdit"/>
+    <AddCategory ref="addCategory" v-on:category-added="refreshCategoriesTable" />
   </div>
 </template>
 
@@ -19,6 +19,9 @@ export default {
     refreshCategoriesTable: function () {
       this.$refs.categoriesTable.refresh();
     },
+    setCategoryToEdit: function(category){
+      this.$refs.addCategory.setCategory(category);
+    }
   },
 };
 </script>
