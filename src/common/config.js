@@ -1,4 +1,4 @@
-let baseUrl = "http://financemanagement.com/api";
+let baseUrl = "http://financemanagementdev.com/api";
 
 export {
     baseUrl
