@@ -122,8 +122,7 @@ export default {
       filters: possibleFilters,
       currentFilter: possibleFilters[0],
       removeButtonEnabled: false,
-      transactionsTable: null,
-      file: null,
+      transactionsTable: null
     };
   },
   methods: {
@@ -275,12 +274,12 @@ export default {
       const files = event.target.files;
       const fileReader = new FileReader();
       fileReader.addEventListener("load", () => {
-        this.imageUrl = fileReader.result;
+        transactionsService.addManyTransactionsXml(new {
+          XmlBase64File: fileReader.result
+        });
       });
       fileReader.readAsDataURL(files[0]);
-      this.file = files[0];
-    },
-    
+    }    
   },
   mounted() {
     periodsService
