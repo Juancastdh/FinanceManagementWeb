@@ -268,18 +268,18 @@ export default {
       this.transactionsTable.rows({ selected: true }).deselect();
     },
     onPickFile: function () {
-      console.log("Clicked upload");
       this.$refs.fileInput.click();
     },
     onFilePicked: function (event) {
-      console.log("File uploaded");
+      const reference = this;
       const files = event.target.files;
       const fileReader = new FileReader();
       fileReader.addEventListener("load", () => {
-        console.log(fileReader.result);
-        transactionsService.addManyTransactionsXml(new {
-          XmlBase64File: fileReader.result
-        });
+        var request = {
+          XmlBase64File: fileReader.result.split(',')[1]
+        };
+        transactionsService.addManyTransactionsXml(request);
+        reference.refresh();
       });
       fileReader.readAsDataURL(files[0]);
     }    
