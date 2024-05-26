@@ -49,7 +49,24 @@
           >
             Remove
           </button>
+          <hr>
+          <button
+            type="button"
+            class="btn btn-primary"
+            id="uploadTransactionsButton"
+            v-on:click="onPickFile"
+          >
+            Upload
+          </button>
+          <input
+            type="file"
+            style="display: none"
+            ref="fileInput"
+            accept=".xml,.json"
+            v-on:change="onFilePicked"
+          />
         </div>
+        <div class="text-left"></div>
       </div>
     </div>
   </div>
@@ -105,7 +122,7 @@ export default {
       filters: possibleFilters,
       currentFilter: possibleFilters[0],
       removeButtonEnabled: false,
-      transactionsTable: null,
+      transactionsTable: null
     };
   },
   methods: {
@@ -250,6 +267,22 @@ export default {
     deselectAllRows: function () {
       this.transactionsTable.rows({ selected: true }).deselect();
     },
+    onPickFile: function () {
+      this.$refs.fileInput.click();
+    },
+    onFilePicked: function (event) {
+      const reference = this;
+      const files = event.target.files;
+      const fileReader = new FileReader();
+      fileReader.addEventListener("load", () => {
+        var request = {
+          XmlBase64File: fileReader.result.split(',')[1]
+        };
+        transactionsService.addManyTransactionsXml(request);
+        reference.refresh();
+      });
+      fileReader.readAsDataURL(files[0]);
+    }    
   },
   mounted() {
     periodsService

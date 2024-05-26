@@ -39,11 +39,20 @@ let getFinancialReport = function(periodId = null, startDate = null, endDate = n
     });
 }
 
+
+let addManyTransactionsXml = function(request){
+    return new Promise((resolve) => {
+        let addManyTransactionsXmlUrl = `${baseUrl}/FinancialTransactions/Many/Xml`;
+        axios.post(addManyTransactionsXmlUrl, request).then(response => resolve(response.data));
+    });
+}
+
 let transactionsService = {
     getTransactions,
     deleteTransactionById,
     addTransaction,
-    getFinancialReport
+    getFinancialReport,
+    addManyTransactionsXml
 };
 
 
