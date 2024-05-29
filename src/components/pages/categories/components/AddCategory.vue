@@ -11,18 +11,16 @@
                 class="form-control"
                 placeholder="Name"
                 id="categoryNameField"
-                v-model="category.name"
+                v-model="categoryToSubmit.category.name"
                 v-bind:class="{
                   'form-control': true,
-                  'is-invalid': !validName() && attemptedToSubmit,
-                  'is-valid': validName() && attemptedToSubmit,
+                  'is-invalid': !validName() && categoryToSubmit.attemptedToSubmit,
+                  'is-valid': validName() && categoryToSubmit.attemptedToSubmit
                 }"
                 required
               />
               <label for="floatingName">Name</label>
-              <div class="invalid-feedback">
-                Please specify a name for the category.
-              </div>
+              <div class="invalid-feedback">Please specify a name for the category.</div>
             </div>
           </div>
           <div class="col-md-6">
@@ -32,11 +30,11 @@
                 class="form-control"
                 placeholder="Percentage"
                 id="categoryPercentageField"
-                v-model="category.percentage"
+                v-model="categoryToSubmit.category.percentage"
                 v-bind:class="{
                   'form-control': true,
-                  'is-invalid': !validPercentage() && attemptedToSubmit,
-                  'is-valid': validPercentage() && attemptedToSubmit,
+                  'is-invalid': !validPercentage() && categoryToSubmit.attemptedToSubmit,
+                  'is-valid': validPercentage() && categoryToSubmit.attemptedToSubmit
                 }"
                 required
               />
@@ -54,12 +52,7 @@
               Submit
             </button>
             <div class="divider" />
-            <button
-              type="reset"
-              class="btn btn-secondary"
-              id="resetButton"
-              v-on:click="clearForm"
-            >
+            <button type="reset" class="btn btn-secondary" id="resetButton" v-on:click="clearForm">
               Reset
             </button>
           </div>
@@ -69,76 +62,81 @@
   </div>
 </template>
 
-<script>
-import { categoriesService } from "../../../../services/categoriesService.js";
+<script setup lang="ts">
+import { baseUrl } from '@/common/config'
+import { CategoriesService } from '@/components/services/categoriesService.js'
+import { Category } from '@/components/services/models/category.js'
+import { ref } from 'vue'
 
-export default {
-  name: "AddCategory",
-  data: function () {
-    return {
-      category: {
-        name: "",
-        percentage: 0,
-        id: null
-      },
-      attemptedToSubmit: false
-    };
-  },
+const categoryToSubmit = ref({
+  category: new Category(0, '', 0),
+  attemptedToSubmit: false
+})
 
-  methods: {
-    addCategory: function () {
-      var self = this;
-      self.attemptedToSubmit = true;
-      if (self.isFormValid() == true) {
-        if(self.category.id == null){
-          categoriesService.addCategory(self.category).then(() => {
-            self.$emit("category-added");
-            self.clearForm();
-          });
-        } 
-        else {
-          categoriesService.updateCategory(self.category).then(() => {
-            self.$emit("category-added");
-            self.clearForm();
-          });
-        }
+const emit = defineEmits(['category-added'])
 
-      }
-    },
-    clearForm: function () {
-      this.attemptedToSubmit = false;
-      this.category.name = "";
-      this.category.percentage = "";
-      this.category.id = null;
-    },
-    isFormValid: function () {
-      var formIsValid = false;
+function validName(): boolean {
+  let nameIsValid = false
 
-      if (this.validName() && this.validPercentage()) {
-        formIsValid = true;
-      }
+  if (categoryToSubmit.value.category.name.length > 0) {
+    nameIsValid = true
+  }
 
-      return formIsValid;
-    },
-    validName: function () {
-      var nameIsValid = false;
-      if (this.category.name.length > 0) {
-        nameIsValid = true;
-      }
-      return nameIsValid;
-    },
-    validPercentage: function () {
-      var percentageIsValid = false;
-      if (this.category.percentage > 0) {
-        percentageIsValid = true;
-      }
-      return percentageIsValid;
-    },
-    setCategory: function(category){
-      this.category = category;
+  return nameIsValid
+}
+
+function validPercentage(): boolean {
+  let percentageIsValid = false
+
+  if (categoryToSubmit.value.category.percentage > 0) {
+    percentageIsValid = true
+  }
+
+  return percentageIsValid
+}
+
+function isFormValid(): boolean {
+  let formIsValid = false
+
+  if (validName() && validPercentage()) {
+    formIsValid = true
+  }
+
+  return formIsValid
+}
+
+function clearForm() {
+  categoryToSubmit.value.attemptedToSubmit = false
+  categoryToSubmit.value.category.name = ''
+  categoryToSubmit.value.category.percentage = 0
+  categoryToSubmit.value.category.id = 0
+  console.log('cleared form')
+  console.log(categoryToSubmit.value)
+}
+
+async function addCategory(): Promise<void> {
+  let categoriesService = new CategoriesService(baseUrl)
+  categoryToSubmit.value.attemptedToSubmit = true
+  if (isFormValid() == true) {
+    if (categoryToSubmit.value.category.id == 0) {
+      await categoriesService.addCategory(categoryToSubmit.value.category)
+      console.log('category added!')
+    } else {
+      await categoriesService.updateCategory(categoryToSubmit.value.category)
     }
-  },
-};
+    emit('category-added')
+    console.log('Emmited event')
+    clearForm()
+  }
+}
+
+function setCategory(category: Category) {
+  categoryToSubmit.value.category = category
+}
+
+defineExpose({
+  setCategory
+})
 </script>
 
 <style scoped>

@@ -1,11 +1,7 @@
 <template>
   <li class="nav-item">
-    <router-link :to="{ name: option.name}">
-      <a
-        class="nav-link"
-        href="#"
-        v-bind:class="{ collapsed: isCollapsed }"
-      >
+    <router-link :to="{ name: option.name }">
+      <a class="nav-link" href="#" v-bind:class="{ collapsed: isCollapsed }">
         <i class="bi bi-grid"></i>
         <span>{{ option.name }}</span>
       </a>
@@ -13,14 +9,17 @@
   </li>
 </template>
 
-<script>
-export default {
-  name: "SidebarItem",
-  props: ["option"],
-  computed: {
-    isCollapsed: function(){
-      return this.$route.name != this.option.name;
-    },
-  }
-};
+<script setup lang="ts">
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+const props = defineProps<{
+  option: any
+}>()
+
+function isCollapsed() {
+  let isCollapsed = route.name != props.option.name
+
+  return isCollapsed
+}
 </script>

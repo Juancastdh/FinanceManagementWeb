@@ -9,15 +9,7 @@
   </section>
 </template>
 
-<script>
-import CategoryBalanceSection from "./components/CategoryBalanceSection.vue";
-import ReportsChartSection from "./components/ReportsChartSection.vue";
-
-export default {
-  name: "DashboardPage",
-  components: {
-    CategoryBalanceSection,
-    ReportsChartSection,
-  },
-};
+<script setup lang="ts">
+import CategoryBalanceSection from './components/CategoryBalanceSection.vue'
+import ReportsChartSection from './components/ReportsChartSection.vue'
 </script>

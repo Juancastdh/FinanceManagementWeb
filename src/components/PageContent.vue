@@ -10,8 +10,4 @@
   </section>
 </template>
 
-<script>
-export default {
-  name: "PageContent",
-};
-</script>
+<script setup lang="ts"></script>

@@ -12,8 +12,4 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "PageTitle",
-};
-</script>
+<script setup lang="ts"></script>
