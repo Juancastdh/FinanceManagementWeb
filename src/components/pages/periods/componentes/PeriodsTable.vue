@@ -164,6 +164,10 @@ async function refresh(){
   enableRemoveButton(); 
 }
 
+defineExpose({
+  refresh
+});
+
 async function removeSelectedPeriods() {
   let periodsService = new PeriodsService(baseUrl);
   let selectedPeriods = periodsTable.value.rows({ selected: true }).data();

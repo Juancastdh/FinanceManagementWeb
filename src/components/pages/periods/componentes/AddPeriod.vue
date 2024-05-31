@@ -86,10 +86,10 @@ const emit = defineEmits(['period-added'])
 
 function areDatesValid(): boolean{
   let datesAreValid = false;
-  let startDate = periodToSubmit.value.period.startDate;
-  let endDate = periodToSubmit.value.period.endDate;
+  let selectedStartDate = new Date(periodToSubmit.value.period.startDate);
+  let selectedEndDate = new Date(periodToSubmit.value.period.endDate);
 
-  if(startDate <= endDate){
+  if(selectedStartDate <= selectedEndDate){
 
     datesAreValid = true;
 
@@ -102,7 +102,9 @@ function areDatesValid(): boolean{
 function isStartDateValid(): boolean{
   let startDateIsValid = false;
 
-  if(periodToSubmit.value.period.startDate.getFullYear() > 1){
+  let selectedStartDate = new Date(periodToSubmit.value.period.startDate);
+
+  if(selectedStartDate.getFullYear() > 1){
     startDateIsValid = true;
   }
 
@@ -112,7 +114,9 @@ function isStartDateValid(): boolean{
 function isEndDateValid(): boolean{
   let endDateIsValid = false;
 
-  if(periodToSubmit.value.period.endDate.getFullYear()>1 && areDatesValid()){
+  let selectedEndDate = new Date(periodToSubmit.value.period.endDate);
+
+  if(selectedEndDate.getFullYear()>1 && areDatesValid()){
     endDateIsValid = true;
   }
 
