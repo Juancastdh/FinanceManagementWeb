@@ -28,11 +28,11 @@ class CategoriesService {
     await axios.put(updateCategoryUrl, category)
   }
 
-  async getCategoryById(id: number): Promise<Category>{
-    let getCategoryByIdUrl = this.baseUrl + '/Categories/' + id;
-    let response = await axios.get<Category>(getCategoryByIdUrl);
-    let category = response.data;
-    return category;
+  async getCategoryById(id: number): Promise<Category> {
+    let getCategoryByIdUrl = this.baseUrl + '/Categories/' + id
+    let response = await axios.get<Category>(getCategoryByIdUrl)
+    let category = response.data
+    return category
   }
 }
 

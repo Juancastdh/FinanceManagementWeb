@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
@@ -21,7 +21,6 @@ const props = defineProps<{
 const isCollapsed = computed(() => {
   let isCollapsed = route.name != props.option.name
 
-  return isCollapsed;
-});
-
+  return isCollapsed
+})
 </script>

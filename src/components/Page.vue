@@ -8,5 +8,4 @@
 <script setup lang="ts">
 import PageTitle from './PageTitle.vue'
 import PageContent from './PageContent.vue'
-
 </script>
