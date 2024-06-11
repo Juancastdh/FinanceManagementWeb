@@ -6,49 +6,30 @@
         <form class="row g-3 needs-validation" novalidate>
           <div class="col-md-6">
             <div class="form-floating">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Name"
-                id="categoryNameField"
-                v-model="categoryToSubmit.category.name"
-                v-bind:class="{
+              <input type="text" class="form-control" placeholder="Name" id="categoryNameField"
+                v-model="categoryToSubmit.category.name" v-bind:class="{
                   'form-control': true,
                   'is-invalid': !validName() && categoryToSubmit.attemptedToSubmit,
                   'is-valid': validName() && categoryToSubmit.attemptedToSubmit
-                }"
-                required
-              />
+                }" required />
               <label for="floatingName">Name</label>
               <div class="invalid-feedback">Please specify a name for the category.</div>
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-floating">
-              <input
-                type="number"
-                class="form-control"
-                placeholder="Percentage"
-                id="categoryPercentageField"
-                v-model="categoryToSubmit.category.percentage"
-                v-bind:class="{
+              <input type="number" class="form-control" placeholder="Percentage" id="categoryPercentageField"
+                v-model="categoryToSubmit.category.percentage" v-bind:class="{
                   'form-control': true,
                   'is-invalid': !validPercentage() && categoryToSubmit.attemptedToSubmit,
                   'is-valid': validPercentage() && categoryToSubmit.attemptedToSubmit
-                }"
-                required
-              />
+                }" required />
               <label for="floatingName">Percentage</label>
               <div class="invalid-feedback">Please specify a percentage.</div>
             </div>
           </div>
           <div class="text-center">
-            <button
-              type="button"
-              class="btn btn-primary"
-              id="addCategoryButton"
-              v-on:click="addCategory"
-            >
+            <button type="button" class="btn btn-primary" id="addCategoryButton" v-on:click="addCategory">
               Submit
             </button>
             <div class="divider" />
@@ -110,8 +91,6 @@ function clearForm() {
   categoryToSubmit.value.category.name = ''
   categoryToSubmit.value.category.percentage = 0
   categoryToSubmit.value.category.id = 0
-  console.log('cleared form')
-  console.log(categoryToSubmit.value)
 }
 
 async function addCategory(): Promise<void> {
@@ -120,12 +99,10 @@ async function addCategory(): Promise<void> {
   if (isFormValid() == true) {
     if (categoryToSubmit.value.category.id == 0) {
       await categoriesService.addCategory(categoryToSubmit.value.category)
-      console.log('category added!')
     } else {
       await categoriesService.updateCategory(categoryToSubmit.value.category)
     }
     emit('category-added')
-    console.log('Emmited event')
     clearForm()
   }
 }
