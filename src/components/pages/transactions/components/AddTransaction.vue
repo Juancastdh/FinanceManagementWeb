@@ -143,12 +143,12 @@ const emit = defineEmits(['transaction-added'])
 
 function getSelectedPeriod(): Period {
   let selectedPeriod = new Period(0, new Date(), new Date())
-
-  let date = new Date(transactionToSubmit.value.transaction.date)
+  let date = new Date(transactionToSubmit.value.transaction.date.toString() + "T00:00:00");
 
   let foundPeriod = transactionToSubmit.value.periods.find(
     (p) => date >= new Date(p.startDate) && date < new Date(p.endDate)
   )
+
 
   if (typeof foundPeriod !== 'undefined') {
     selectedPeriod = foundPeriod
@@ -303,5 +303,6 @@ onMounted(async () => {
   let periodsService = new PeriodsService(baseUrl)
   let periods = await periodsService.getPeriods()
   transactionToSubmit.value.periods = periods
+
 })
 </script>
