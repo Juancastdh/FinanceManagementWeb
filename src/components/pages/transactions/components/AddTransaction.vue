@@ -6,17 +6,11 @@
         <form class="row g-3 needs-validation" novalidate>
           <div class="col-md-6">
             <div class="form-floating">
-              <input
-                type="date"
-                class="form-control"
-                id="transactionDateField"
-                v-model="transactionToSubmit.transaction.date"
-                v-bind:class="{
+              <input type="date" class="form-control" id="transactionDateField"
+                v-model="transactionToSubmit.transaction.date" v-bind:class="{
                   'is-invalid': !isDateValid() && transactionToSubmit.attemptedToSubmit,
                   'is-valid': isDateValid() && transactionToSubmit.attemptedToSubmit
-                }"
-                required
-              />
+                }" required />
               <label for="floatingName">Date</label>
               <div class="invalid-feedback">
                 Please specify a transaction date that is within an existing period.
@@ -25,39 +19,24 @@
           </div>
           <div class="col-md-6">
             <div class="form-floating">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Description"
-                id="transactionDescriptionField"
-                v-model="transactionToSubmit.transaction.description"
-                v-bind:class="{
+              <input type="text" class="form-control" placeholder="Description" id="transactionDescriptionField"
+                v-model="transactionToSubmit.transaction.description" v-bind:class="{
                   'form-control': true,
                   'is-invalid': !isDescriptionValid() && transactionToSubmit.attemptedToSubmit,
                   'is-valid': isDescriptionValid() && transactionToSubmit.attemptedToSubmit
-                }"
-                required
-              />
+                }" required />
               <label for="floatingName">Description</label>
               <div class="invalid-feedback">Please specify a description.</div>
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-floating">
-              <input
-                type="number"
-                class="form-control"
-                placeholder="Value"
-                id="transactionValueField"
-                step=".01"
-                v-model="transactionToSubmit.transaction.value"
-                v-bind:class="{
+              <input type="number" class="form-control" placeholder="Value" id="transactionValueField" step=".01"
+                v-model="transactionToSubmit.transaction.value" v-bind:class="{
                   'form-control': true,
                   'is-invalid': !isValueValid() && transactionToSubmit.attemptedToSubmit,
                   'is-valid': isValueValid() && transactionToSubmit.attemptedToSubmit
-                }"
-                required
-              />
+                }" required />
               <label for="floatingName">Value</label>
               <div class="invalid-feedback">Please specify a value.</div>
             </div>
@@ -65,17 +44,11 @@
 
           <div class="col-md-6">
             <div class="form-floating mb-3">
-              <select
-                class="form-select"
-                id="categoryCombobox"
-                aria-label="Category"
-                v-model="transactionToSubmit.transaction.categoryId"
-                v-bind:class="{
+              <select class="form-select" id="categoryCombobox" aria-label="Category"
+                v-model="transactionToSubmit.transaction.categoryId" v-bind:class="{
                   'is-invalid': !isCategoryValid() && transactionToSubmit.attemptedToSubmit,
                   'is-valid': isCategoryValid() && transactionToSubmit.attemptedToSubmit
-                }"
-                :disabled="isSplitIntoCategoriesSelected()"
-              >
+                }" :disabled="isSplitIntoCategoriesSelected()">
                 <option v-for="category in categories" :key="category.id" :value="category.id">
                   {{ category.name }}
                 </option>
@@ -89,35 +62,19 @@
             <legend class="col-form-label col-sm-2 pt-0">Split into all categories?</legend>
             <div class="col-sm-6">
               <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="splitRadios"
-                  value="true"
-                  id="splitIntoAllCategories"
-                  v-model="transactionToSubmit.splitIntoCategories"
-                  v-bind:class="{
+                <input class="form-check-input" type="radio" name="splitRadios" value="true" id="splitIntoAllCategories"
+                  v-model="transactionToSubmit.splitIntoCategories" v-bind:class="{
                     'is-invalid': !isSplitOptionValid() && transactionToSubmit.attemptedToSubmit,
                     'is-valid': isSplitOptionValid() && transactionToSubmit.attemptedToSubmit
-                  }"
-                  required
-                />
+                  }" required />
                 <label class="form-check-label" for="splitIntoAllCategories"> Yes </label>
               </div>
               <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="splitRadios"
-                  value="false"
-                  id="doNotSplitIntoAllCategories"
-                  v-model="transactionToSubmit.splitIntoCategories"
-                  v-bind:class="{
+                <input class="form-check-input" type="radio" name="splitRadios" value="false"
+                  id="doNotSplitIntoAllCategories" v-model="transactionToSubmit.splitIntoCategories" v-bind:class="{
                     'is-invalid': !isSplitOptionValid() && transactionToSubmit.attemptedToSubmit,
                     'is-valid': isSplitOptionValid() && transactionToSubmit.attemptedToSubmit
-                  }"
-                  required
-                />
+                  }" required />
                 <label class="form-check-label" for="doNotSplitIntoAllCategories"> No </label>
                 <div class="invalid-feedback">Please select an option</div>
               </div>
@@ -128,35 +85,19 @@
             <legend class="col-form-label col-sm-2 pt-0">Type</legend>
             <div class="col-sm-6">
               <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="typeRadios"
-                  value="false"
-                  id="transactionIncomeType"
-                  v-model="transactionToSubmit.transaction.isExpense"
-                  v-bind:class="{
+                <input class="form-check-input" type="radio" name="typeRadios" value="false" id="transactionIncomeType"
+                  v-model="transactionToSubmit.transaction.isExpense" v-bind:class="{
                     'is-invalid': !isTypeValid() && transactionToSubmit.attemptedToSubmit,
                     'is-valid': isTypeValid() && transactionToSubmit.attemptedToSubmit
-                  }"
-                  required
-                />
+                  }" required />
                 <label class="form-check-label" for="transactionIncomeType"> Income </label>
               </div>
               <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="typeRadios"
-                  value="true"
-                  id="transactionExpenseType"
-                  v-model="transactionToSubmit.transaction.isExpense"
-                  v-bind:class="{
+                <input class="form-check-input" type="radio" name="typeRadios" value="true" id="transactionExpenseType"
+                  v-model="transactionToSubmit.transaction.isExpense" v-bind:class="{
                     'is-invalid': !isTypeValid() && transactionToSubmit.attemptedToSubmit,
                     'is-valid': isTypeValid() && transactionToSubmit.attemptedToSubmit
-                  }"
-                  required
-                />
+                  }" required />
                 <label class="form-check-label" for="transactionExpenseType"> Expense </label>
                 <div class="invalid-feedback">Please select a type</div>
               </div>
@@ -164,12 +105,7 @@
           </div>
 
           <div class="text-center">
-            <button
-              type="button"
-              class="btn btn-primary"
-              id="addTransactionButton"
-              v-on:click="addTransaction"
-            >
+            <button type="button" class="btn btn-primary" id="addTransactionButton" v-on:click="addTransaction">
               Submit
             </button>
             <div class="divider" />
@@ -255,7 +191,7 @@ function isDescriptionValid(): boolean {
 function isSplitIntoCategoriesSelected(): boolean {
   let splitIntoCategoriesIsSelected = false
 
-  if (transactionToSubmit.value.splitIntoCategories == true) {
+  if (transactionToSubmit.value.splitIntoCategories.toString() == "true") {
     splitIntoCategoriesIsSelected = true
   }
 
