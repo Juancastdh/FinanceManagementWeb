@@ -29,8 +29,10 @@
       ]
     },
     {
-      "route": "/login",
-      "rewrite": "/.auth/login/aadb2c"
+      "route": "/categories",
+      "allowedRoles": [
+        "authenticated"
+      ]
     }
   ],
   "navigationFallback": {
@@ -42,7 +44,7 @@
   },
   "responseOverrides": {
     "401": {
-      "redirect": "/login",
+      "redirect": "/.auth/login/aadb2c",
       "statusCode": 302
     }
   }
