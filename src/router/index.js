@@ -3,6 +3,7 @@ import DashboardPage from "../components/pages/dashboard/DashboardPage.vue";
 import PeriodsPage from "../components/pages/periods/PeriodsPage.vue";
 import CategoriesPage from "../components/pages/categories/CategoriesPage.vue";
 import TransactionsPage from "../components/pages/transactions/TransactionsPage.vue";
+import AccountsPage from "../components/pages/accounts/AccountsPage.vue";
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: "/transactions",
     name: "Transactions",
     component: TransactionsPage
+  },
+  {
+    path: "/accounts",
+    name: "Accounts",
+    component: AccountsPage
   }
 ];
 
