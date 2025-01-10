@@ -62,29 +62,14 @@
           </div>
 
           <div class="col-md-6">
-            <legend class="col-form-label col-sm-2 pt-0">Split into all categories?</legend>
-            <div class="col-sm-6">
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="splitRadios" value="true" id="splitIntoAllCategories"
-                  v-model="splitIntoCategories" v-bind:class="{
-                    'is-invalid': !validSplitOption() && attemptedToSubmit,
-                    'is-valid': validSplitOption() && attemptedToSubmit
-                  }" required />
-                <label class="form-check-label" for="splitIntoAllCategories">
-                  Yes
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="splitRadios" value="false"
-                  id="doNotSplitIntoAllCategories" v-model="splitIntoCategories" v-bind:class="{
-                    'is-invalid': !validSplitOption() && attemptedToSubmit,
-                    'is-valid': validSplitOption() && attemptedToSubmit,
-                  }" required />
-                <label class="form-check-label" for="doNotSplitIntoAllCategories">
-                  No
-                </label>
-                <div class="invalid-feedback">Please select an option</div>
-              </div>
+            <div class="form-floating mb-3">
+              <select class="form-select" id="accountCombobox" aria-label="Account"
+                v-model="transaction.accountIdentifier">
+                <option v-for="account in accounts" :key="account.identifier" :value="account.identifier">
+                  {{ account.description }}
+                </option>
+              </select>
+              <label for="accountCombobox">Account</label>
             </div>
           </div>
 
@@ -116,14 +101,29 @@
           </div>
 
           <div class="col-md-6">
-            <div class="form-floating mb-3">
-              <select class="form-select" id="accountCombobox" aria-label="Account"
-                v-model="transaction.accountIdentifier">
-                <option v-for="account in accounts" :key="account.identifier" :value="account.identifier">
-                  {{ account.description }}
-                </option>
-              </select>
-              <label for="accountCombobox">Account</label>
+            <legend class="col-form-label col-sm-2 pt-0">Split into all categories?</legend>
+            <div class="col-sm-6">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="splitRadios" value="true" id="splitIntoAllCategories"
+                  v-model="splitIntoCategories" v-bind:class="{
+                    'is-invalid': !validSplitOption() && attemptedToSubmit,
+                    'is-valid': validSplitOption() && attemptedToSubmit
+                  }" required />
+                <label class="form-check-label" for="splitIntoAllCategories">
+                  Yes
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="splitRadios" value="false"
+                  id="doNotSplitIntoAllCategories" v-model="splitIntoCategories" v-bind:class="{
+                    'is-invalid': !validSplitOption() && attemptedToSubmit,
+                    'is-valid': validSplitOption() && attemptedToSubmit,
+                  }" required />
+                <label class="form-check-label" for="doNotSplitIntoAllCategories">
+                  No
+                </label>
+                <div class="invalid-feedback">Please select an option</div>
+              </div>
             </div>
           </div>
 
