@@ -35,6 +35,7 @@
               <th scope="col">Category</th>
               <th scope="col">Value</th>
               <th scope="col">Type</th>
+              <th scope="col">Account</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -115,7 +116,7 @@ var possibleFilters = [
 
 export default {
   name: "TransactionsTable",
-  props: ["categories"],
+  props: ["categories", "accounts"],
   data: function () {
     return {
       latestPeriod: null,
@@ -179,6 +180,12 @@ export default {
               } else {
                 return '<span class="badge bg-success">Income</span>';
               }
+            },
+          },
+          {
+            data: "accountIdentifier",
+            render: function (data) {
+              return self.getAccountByIdentifier(data).description;
             },
           },
         ],
@@ -282,7 +289,18 @@ export default {
         reference.refresh();
       });
       fileReader.readAsDataURL(files[0]);
-    }    
+    },
+    getAccountByIdentifier: function (accountIdentifier) {
+      var account = this.accounts.find((account) => account.identifier == accountIdentifier);
+      if(account == null){
+        account = {
+          id: null,
+          identifier: "",
+          description: ""
+        }
+      }
+      return account;
+    },    
   },
   mounted() {
     periodsService
