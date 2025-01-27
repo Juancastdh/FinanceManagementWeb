@@ -1,13 +1,12 @@
 <template>
-  <div v-if="categoriesFetched && accountsFetched">
-    <TransactionsTable ref="transactionsTable" v-bind:categories="categories" v-bind:accounts="accounts"/>
-    <AddTransaction v-on:transaction-added="refreshTransactionsTable" v-bind:categories="categories" v-bind:accounts="accounts"/>
+  <div v-if="accountsFetched">
+    <TransactionsTable ref="transactionsTable" v-bind:accounts="accounts"/>
+    <AddTransaction v-on:transaction-added="refreshTransactionsTable" v-bind:accounts="accounts"/>
   </div>
 </template>
 
 <script>
 import TransactionsTable from "./components/TransactionsTable.vue";
-import { categoriesService } from "../../../services/categoriesService.js";
 import { accountsService } from "../../../services/accountsService.js";
 import AddTransaction from "./components/AddTransaction.vue";
 
@@ -19,8 +18,6 @@ export default {
   },
   data: function () {
     return {
-      categories: [],
-      categoriesFetched: false,
       accounts: [],
       accountsFetched: false
     }
@@ -31,16 +28,6 @@ export default {
     },
   },
   mounted() {
-
-    categoriesService
-      .getCategories()
-      .then((categories) => {
-        this.categories = categories;
-        this.categoriesFetched = true;
-      });
-
-      
-
     accountsService.getAccounts().then((accounts) => {
       this.accounts = accounts;
       this.accountsFetched = true;

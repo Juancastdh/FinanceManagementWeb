@@ -30,12 +30,20 @@ let updateCategory = function(category){
     });
 }
 
+let getActiveCategories = function(){
+    return new Promise((resolve) => {
+        let getCategoriesUrl = `${baseUrl}/Categories?deleted=false`;
+        axios.get(getCategoriesUrl).then(response => resolve(response.data));
+    });
+}
+
 
 let categoriesService = {
     getCategories,
     deleteCategoryById,
     addCategory,
-    updateCategory
+    updateCategory,
+    getActiveCategories
 };
 
 

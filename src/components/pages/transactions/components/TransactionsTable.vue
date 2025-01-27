@@ -86,6 +86,7 @@ import {
   getDateRangeByMonthRange,
   convertDateToDotNetString,
 } from "../../../../common/utils.js";
+import { categoriesService } from "../../../../services/categoriesService.js";
 
 var possibleFilters = [
   {
@@ -116,14 +117,15 @@ var possibleFilters = [
 
 export default {
   name: "TransactionsTable",
-  props: ["categories", "accounts"],
+  props: ["accounts"],
   data: function () {
     return {
       latestPeriod: null,
       filters: possibleFilters,
       currentFilter: possibleFilters[0],
       removeButtonEnabled: false,
-      transactionsTable: null
+      transactionsTable: null,
+      categories: []
     };
   },
   methods: {
@@ -312,6 +314,13 @@ export default {
       .then((financialReport) => {
         this.init(financialReport.financialTransactions);
       });
+
+      categoriesService
+      .getCategories()
+      .then((categories) => {
+        this.categories = categories;
+      });
+
   },
 };
 </script>
