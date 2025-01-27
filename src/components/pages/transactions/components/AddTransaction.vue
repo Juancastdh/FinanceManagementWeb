@@ -145,7 +145,7 @@
 <script>
 import { transactionsService } from "../../../../services/transactionsService.js";
 import { periodsService } from "../../../../services/periodsService.js";
-import { categoriesService } from "../../../services/categoriesService.js";
+import { categoriesService } from "../../../../services/categoriesService.js";
 
 export default {
   name: "AddTransaction",

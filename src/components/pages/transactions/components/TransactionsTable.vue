@@ -86,7 +86,7 @@ import {
   getDateRangeByMonthRange,
   convertDateToDotNetString,
 } from "../../../../common/utils.js";
-import { categoriesService } from "../../../services/categoriesService.js";
+import { categoriesService } from "../../../../services/categoriesService.js";
 
 var possibleFilters = [
   {
