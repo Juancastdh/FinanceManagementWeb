@@ -199,7 +199,7 @@ export default {
           transactionsToBeAdded.push(self.transaction);
         }
         else {
-          var categories = self.$props.categories;
+          var categories = self.categories;
           categories.forEach(function (category) {
             var categoryTransaction = {};
             Object.assign(categoryTransaction, self.transaction);
