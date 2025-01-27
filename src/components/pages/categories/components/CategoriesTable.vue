@@ -116,7 +116,7 @@ export default {
       this.categoriesTable.clear();
     },
     reload: function () {
-      categoriesService.getCategories().then((categories) => {
+      categoriesService.getActiveCategories().then((categories) => {
         this.render(categories);
       });
     },
@@ -188,7 +188,7 @@ export default {
     },
   },
   mounted() {
-    categoriesService.getCategories().then((categories) => {
+    categoriesService.getActiveCategories().then((categories) => {
       this.init(categories);
     });
   },

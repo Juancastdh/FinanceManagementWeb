@@ -32,7 +32,8 @@ export default {
           .then((financialReport) => {
             var categoryWithBalance = category;
             categoryWithBalance.balance = financialReport.totalValue;
-            self.categories.push(categoryWithBalance);
+            if(category.deleted == false || categoryWithBalance.balance != 0)
+              self.categories.push(categoryWithBalance);
           });
       });
     });
