@@ -162,7 +162,6 @@ export default {
             data: "account",
             render: function (data) {
               var accountDescription = "";
-              console.log(data);
               if (data != null) {
                 accountDescription = data.description
               }
@@ -194,7 +193,6 @@ export default {
       });
     },
     render: function (transactions) {
-      console.log(transactions);
       this.transactionsTable.rows.add(transactions);
       this.transactionsTable.draw();
     },
