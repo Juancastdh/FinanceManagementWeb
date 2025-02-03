@@ -1,6 +1,6 @@
 <template>
   <div v-if="accountsFetched">
-    <TransactionsTable ref="transactionsTable" v-bind:accounts="accounts"/>
+    <TransactionsTable ref="transactionsTable"/>
     <AddTransaction v-on:transaction-added="refreshTransactionsTable" v-bind:accounts="accounts"/>
   </div>
 </template>

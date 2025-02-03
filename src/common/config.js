@@ -1,4 +1,4 @@
-let baseUrl = "https://app-financemanagementapi-prod-eastus.azurewebsites.net/api";
+let baseUrl = "http://financemanagementdev.com/api";
 
 export {
     baseUrl
