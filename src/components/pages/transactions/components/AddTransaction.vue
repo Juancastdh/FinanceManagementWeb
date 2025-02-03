@@ -146,10 +146,10 @@
 import { transactionsService } from "../../../../services/transactionsService.js";
 import { periodsService } from "../../../../services/periodsService.js";
 import { categoriesService } from "../../../../services/categoriesService.js";
+import { accountsService } from "../../../../services/accountsService.js";
 
 export default {
   name: "AddTransaction",
-  props: ["accounts"],
   data: function () {
     return {
       transaction: {
@@ -164,7 +164,8 @@ export default {
       attemptedToSubmit: false,
       splitIntoCategories: false,
       periods: [],
-      categories: []
+      categories: [],
+      accounts: []
     };
   },
   methods: {
@@ -308,6 +309,9 @@ export default {
       .then((categories) => {
         this.categories = categories;
       });
+    accountsService.getAccounts().then((accounts) => {
+      this.accounts = accounts;
+    });
 
   },
 };

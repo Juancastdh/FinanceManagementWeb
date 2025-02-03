@@ -2,21 +2,14 @@
   <div class="row">
     <div class="card recent-sales">
       <div class="filter">
-        <a class="icon" href="#" data-bs-toggle="dropdown"
-          ><i class="bi bi-three-dots"></i
-        ></a>
+        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
           <li class="dropdown-header text-start">
             <h6>Filter</h6>
           </li>
           <li v-for="filter in filters" v-bind:key="filter.id">
-            <a
-              class="dropdown-item"
-              name="reports-filter"
-              v-bind:id="filter.id"
-              v-on:click="changeCurrentFilter(filter)"
-              >{{ filter.name }}</a
-            >
+            <a class="dropdown-item" name="reports-filter" v-bind:id="filter.id"
+              v-on:click="changeCurrentFilter(filter)">{{ filter.name }}</a>
           </li>
         </ul>
       </div>
@@ -41,31 +34,15 @@
           <tbody></tbody>
         </table>
         <div class="text-left">
-          <button
-            type="button"
-            class="btn btn-primary"
-            id="removeButton"
-            v-on:click="removeSelectedTransactions"
-            :disabled="!removeButtonEnabled"
-          >
+          <button type="button" class="btn btn-primary" id="removeButton" v-on:click="removeSelectedTransactions"
+            :disabled="!removeButtonEnabled">
             Remove
           </button>
           <hr>
-          <button
-            type="button"
-            class="btn btn-primary"
-            id="uploadTransactionsButton"
-            v-on:click="onPickFile"
-          >
+          <button type="button" class="btn btn-primary" id="uploadTransactionsButton" v-on:click="onPickFile">
             Upload
           </button>
-          <input
-            type="file"
-            style="display: none"
-            ref="fileInput"
-            accept=".xml,.json"
-            v-on:change="onFilePicked"
-          />
+          <input type="file" style="display: none" ref="fileInput" accept=".xml,.json" v-on:change="onFilePicked" />
         </div>
         <div class="text-left"></div>
       </div>
@@ -86,7 +63,6 @@ import {
   getDateRangeByMonthRange,
   convertDateToDotNetString,
 } from "../../../../common/utils.js";
-import { categoriesService } from "../../../../services/categoriesService.js";
 
 var possibleFilters = [
   {
@@ -117,7 +93,6 @@ var possibleFilters = [
 
 export default {
   name: "TransactionsTable",
-  props: ["accounts"],
   data: function () {
     return {
       latestPeriod: null,
@@ -125,7 +100,6 @@ export default {
       currentFilter: possibleFilters[0],
       removeButtonEnabled: false,
       transactionsTable: null,
-      categories: []
     };
   },
   methods: {
@@ -163,9 +137,9 @@ export default {
             data: "description",
           },
           {
-            data: "categoryId",
+            data: "category",
             render: function (data) {
-              return self.getCategoryById(data).name;
+              return data.name;
             },
           },
           {
@@ -185,9 +159,13 @@ export default {
             },
           },
           {
-            data: "accountIdentifier",
+            data: "account",
             render: function (data) {
-              return self.getAccountByIdentifier(data).description;
+              var accountDescription = "";
+              if (data != null) {
+                accountDescription = data.description
+              }
+              return accountDescription;
             },
           },
         ],
@@ -232,9 +210,6 @@ export default {
           }
         });
       });
-    },
-    getCategoryById: function (categoryId) {
-      return this.categories.find((category) => category.id == categoryId);
     },
     changeCurrentFilter: function (filter) {
       this.currentFilter = filter;
@@ -291,18 +266,7 @@ export default {
         reference.refresh();
       });
       fileReader.readAsDataURL(files[0]);
-    },
-    getAccountByIdentifier: function (accountIdentifier) {
-      var account = this.accounts.find((account) => account.identifier == accountIdentifier);
-      if(account == null){
-        account = {
-          id: null,
-          identifier: "",
-          description: ""
-        }
-      }
-      return account;
-    },    
+    }
   },
   mounted() {
     periodsService
@@ -314,15 +278,6 @@ export default {
       .then((financialReport) => {
         this.init(financialReport.financialTransactions);
       });
-
-      categoriesService
-      .getCategories()
-      .then((categories) => {
-        this.categories = categories;
-      });
-
   },
 };
 </script>
-
-
