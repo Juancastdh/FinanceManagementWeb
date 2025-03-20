@@ -13,7 +13,10 @@
       ]
     },
     {
-      "route": "/categories"
+      "route": "/categories",
+      "methods": [
+        "get"
+      ]
     },
     {
       "route": "/accounts",
