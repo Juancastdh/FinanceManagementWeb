@@ -8,10 +8,11 @@
       "rewrite": "/periods"
     },
     {
-      "route": "/transactions",
+      "route": "/transactions*",
       "methods": [
         "get"
-      ]
+      ],
+      "rewrite": "/transactions"
     },
     {
       "route": "/categories",
