@@ -1,10 +1,11 @@
 {
   "routes": [
     {
-      "route": "/periods",
+      "route": "/periods*",
       "methods": [
         "get"
-      ]
+      ],
+      "rewrite": "/periods"
     },
     {
       "route": "/transactions",
