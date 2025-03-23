@@ -4,15 +4,13 @@
       "route": "/periods*",
       "methods": [
         "get"
-      ],
-      "rewrite": "/periods"
+      ]
     },
     {
       "route": "/transactions*",
       "methods": [
         "get"
-      ],
-      "rewrite": "/transactions"
+      ]
     },
     {
       "route": "/categories",
@@ -26,5 +24,9 @@
         "get"
       ]
     }
-  ]
+  ],
+  "navigationFallback": {
+    "rewrite": "index.html",
+    "exclude": ["/images/*.{png,jpg,gif}", "/css/*"]
+  }
 }
