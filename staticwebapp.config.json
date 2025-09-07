@@ -1,16 +1,6 @@
 {
   "routes": [
     {
-      "route": "/.auth/login/aad",
-      "redirect": "/"
-    },
-    {
-      "route": "/.auth/logout",
-      "allowedRoles": [
-        "authenticated"
-      ]
-    },
-    {
       "route": "/*",
       "allowedRoles": [
         "authenticated"
