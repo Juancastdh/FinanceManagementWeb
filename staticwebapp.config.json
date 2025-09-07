@@ -13,6 +13,9 @@
       "route": "/transactions*",
       "methods": [
         "get"
+      ],
+      "allowedRoles": [
+        "authenticated"
       ]
     },
     {
