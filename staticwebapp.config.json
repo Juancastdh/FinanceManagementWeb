@@ -4,6 +4,9 @@
       "route": "/periods*",
       "methods": [
         "get"
+      ],
+      "allowedRoles": [
+        "authenticated"
       ]
     },
     {
