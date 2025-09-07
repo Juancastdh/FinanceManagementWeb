@@ -45,6 +45,12 @@
       "allowedRoles": [
         "authenticated"
       ]
+    },
+    {
+      "route": "/",
+      "allowedRoles": [
+        "authenticated"
+      ]
     }
   ],
   "navigationFallback": {
