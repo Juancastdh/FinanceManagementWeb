@@ -22,6 +22,9 @@
       "route": "/categories",
       "methods": [
         "get"
+      ],
+      "allowedRoles": [
+        "authenticated"
       ]
     },
     {
