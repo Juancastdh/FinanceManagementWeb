@@ -5,6 +5,12 @@
       "allowedRoles": [
         "authenticated"
       ]
+    },
+    {
+      "route": "/.auth/login/aad",
+      "allowedRoles": [
+        "anonymous"
+      ]
     }
   ],
   "responseOverrides": {
