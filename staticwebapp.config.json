@@ -1,53 +1,11 @@
 {
   "routes": [
     {
-      "route": "/periods*",
-      "methods": [
-        "get"
-      ],
-      "allowedRoles": [
-        "authenticated"
-      ]
-    },
-    {
-      "route": "/transactions*",
-      "methods": [
-        "get"
-      ],
-      "allowedRoles": [
-        "authenticated"
-      ]
-    },
-    {
-      "route": "/categories",
-      "methods": [
-        "get"
-      ],
-      "allowedRoles": [
-        "authenticated"
-      ]
-    },
-    {
-      "route": "/accounts",
-      "methods": [
-        "get"
-      ],
-      "allowedRoles": [
-        "authenticated"
-      ]
-    },
-    {
       "route": "/.auth/login/aad",
       "redirect": "/"
     },
     {
       "route": "/.auth/logout",
-      "allowedRoles": [
-        "authenticated"
-      ]
-    },
-    {
-      "route": "/",
       "allowedRoles": [
         "authenticated"
       ]
