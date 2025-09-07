@@ -27,6 +27,9 @@
     {
       "route": "/.auth/login/aad",
       "redirect": "/"
+    },
+    {
+      "route": "/.auth/logout"
     }
   ],
   "navigationFallback": {
