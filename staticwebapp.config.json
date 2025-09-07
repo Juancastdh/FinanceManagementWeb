@@ -31,6 +31,9 @@
       "route": "/accounts",
       "methods": [
         "get"
+      ],
+      "allowedRoles": [
+        "authenticated"
       ]
     },
     {
