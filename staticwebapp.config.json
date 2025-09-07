@@ -29,7 +29,10 @@
       "redirect": "/"
     },
     {
-      "route": "/.auth/logout"
+      "route": "/.auth/logout",
+      "allowedRoles": [
+        "authenticated"
+      ]
     }
   ],
   "navigationFallback": {
