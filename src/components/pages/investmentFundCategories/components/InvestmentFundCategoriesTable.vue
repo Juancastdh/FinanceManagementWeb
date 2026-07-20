@@ -66,7 +66,7 @@ export default {
   methods: {
     init: function (investmentFundCategories) {
       var self = this;
-      self.investmentFundsTable = $("#investmentFundCategoriesTable").DataTable({
+      self.investmentFundCategoriesTable = $("#investmentFundCategoriesTable").DataTable({
         columnDefs: [
           {
             targets: 0,
@@ -79,7 +79,7 @@ export default {
           style: "multi",
         },
         order: [[1, "asc"]],
-        data: investmentFunds,
+        data: investmentFundCategories,
         columns: [
           {
             data: "id",
@@ -101,11 +101,11 @@ export default {
           }
         ],
       });
-      self.investmentFundsTable.on("select", function () {
+      self.investmentFundCategoriesTable.on("select", function () {
         self.enableRemoveButton();
         self.enableEditButton();
       });
-      self.investmentFundsTable.on("deselect", function () {
+      self.investmentFundCategoriesTable.on("deselect", function () {
         self.enableRemoveButton();
         self.enableEditButton();
       });

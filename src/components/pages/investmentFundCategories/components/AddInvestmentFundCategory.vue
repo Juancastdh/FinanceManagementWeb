@@ -138,7 +138,6 @@ export default {
     }
   },
   mounted() {
-    var self = this;
     investmentFundsService
       .getActiveInvestmentFunds()
       .then((funds) => {
