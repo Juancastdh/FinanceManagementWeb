@@ -26,7 +26,7 @@
               class="dropdown-item"
               v-bind:class= "{ disabled: !editButtonEnabled}"
               id="editButton"
-              v-on:click="editSelectedCategory"
+              v-on:click="editSelectedInvestmentFund"
             >
               Edit
             </a>
@@ -36,7 +36,7 @@
               class="dropdown-item"
               v-bind:class= "{ disabled: !removeButtonEnabled}"
               id="removeButton"
-              v-on:click="removeSelectedCategories"
+              v-on:click="removeSelectedInvestmentFunds"
             >
               Remove
             </a>

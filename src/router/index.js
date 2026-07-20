@@ -34,7 +34,7 @@ const routes = [
   },
   {
     path: "/investment-funds",
-    name: "InvestmentFunds",
+    name: "Investment Funds",
     component: InvestmentFundsPage
   }
 ];
