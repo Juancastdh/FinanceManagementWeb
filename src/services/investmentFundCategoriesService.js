@@ -3,37 +3,37 @@ import { baseUrl } from "../common/config.js";
 
 let getInvestmentFundCategories = function(){
     return new Promise((resolve) => {
-        let getInvestmentFundsUrl = `${baseUrl}/InvestmentFundCategories`;
-        axios.get(getInvestmentFundsUrl).then(response => resolve(response.data));
+        let getInvestmentFundCategoriesUrl = `${baseUrl}/InvestmentFundCategories`;
+        axios.get(getInvestmentFundCategoriesUrl).then(response => resolve(response.data));
     });
 }
 
-let deleteInvestmentFundCategoryById = function (fundId) {
+let deleteInvestmentFundCategoryById = function (investmentFundCategoryId) {
 
     return new Promise((resolve) => {
-        let deleteInvestmentFundUrl = baseUrl + "/InvestmentFundCategories/" + fundId;
-        axios.delete(deleteInvestmentFundUrl).then(response => resolve(response.data));
+        let deleteInvestmentFundCategoryUrl = baseUrl + "/InvestmentFundCategories/" + investmentFundCategoryId;
+        axios.delete(deleteInvestmentFundCategoryUrl).then(response => resolve(response.data));
     });
 }
 
-let addInvestmentFundCategory = function(fund){
+let addInvestmentFundCategory = function(investmentFundCategory){
     return new Promise((resolve) => {
-        let addInvestmentFundUrl = `${baseUrl}/InvestmentFundCategories`;
-        axios.post(addInvestmentFundUrl, fund).then(response => resolve(response.data));
+        let addInvestmentFundCategoryUrl = `${baseUrl}/InvestmentFundCategories`;
+        axios.post(addInvestmentFundCategoryUrl, investmentFundCategory).then(response => resolve(response.data));
     });
 }
 
-let updateInvestmentFundCategory = function(fund){
+let updateInvestmentFundCategory = function(investmentFundCategory){
     return new Promise((resolve) => {
-        let updateInvestmentFundUrl = `${baseUrl}/InvestmentFundCategories`;
-        axios.put(updateInvestmentFundUrl, fund).then(response => resolve(response.data));
+        let updateInvestmentFundCategoryUrl = `${baseUrl}/InvestmentFundCategories`;
+        axios.put(updateInvestmentFundCategoryUrl, investmentFundCategory).then(response => resolve(response.data));
     });
 }
 
 let getActiveInvestmentFundCategories = function(){
     return new Promise((resolve) => {
-        let getInvestmentFundsUrl = `${baseUrl}/InvestmentFundCategories?deleted=false`;
-        axios.get(getInvestmentFundsUrl).then(response => resolve(response.data));
+        let getActiveInvestmentFundCategoriesUrl = `${baseUrl}/InvestmentFundCategories?deleted=false`;
+        axios.get(getActiveInvestmentFundCategoriesUrl).then(response => resolve(response.data));
     });
 }
 
