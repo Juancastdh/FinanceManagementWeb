@@ -1,7 +1,7 @@
 import axios from "axios";
 import { baseUrl } from "../common/config.js";
 
-let getInvestmentFundTransactions = function(investmentFundId = null, investmentFundCategoryId = null){
+let getInvestmentFundTransactions = function(investmentFundId = null, investmentFundCategoryId = null, startDate = null, endDate = null){
     return new Promise((resolve) => {
         let getInvestmentFundTransactionsUrl = `${baseUrl}/InvestmentFundTransactions`;
         axios.request({
@@ -9,7 +9,9 @@ let getInvestmentFundTransactions = function(investmentFundId = null, investment
             method: 'get',
             params: {
                 investmentFundId: investmentFundId,
-                investmentFundCategoryId: investmentFundCategoryId
+                investmentFundCategoryId: investmentFundCategoryId,
+                startDate: startDate,
+                endDate: endDate
             }
         } ).then(response => resolve(response.data));
     });
