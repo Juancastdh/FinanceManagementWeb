@@ -27,7 +27,7 @@
           </div>
           <div class="col-md-6">
             <div class="form-floating mb-3">
-              <select class="form-select" id="investmentFundCombobox" aria-label="investmentFundCategory" v-model="fundCategory.investmentFundId"
+              <select class="form-select" id="investmentFundCombobox" aria-label="Investment Fund" v-model="fundCategory.investmentFundId"
                 v-bind:class="{
                   'is-invalid': !validFund() && attemptedToSubmit,
                   'is-valid': validFund() && attemptedToSubmit

@@ -30,9 +30,12 @@ let updateInvestmentFundCategory = function(investmentFundCategory){
     });
 }
 
-let getActiveInvestmentFundCategories = function(){
+let getActiveInvestmentFundCategories = function(investmentFundId = null){
     return new Promise((resolve) => {
         let getActiveInvestmentFundCategoriesUrl = `${baseUrl}/InvestmentFundCategories?deleted=false`;
+        if (investmentFundId) {
+            getActiveInvestmentFundCategoriesUrl += `&investmentFundId=${investmentFundId}`;
+        }
         axios.get(getActiveInvestmentFundCategoriesUrl).then(response => resolve(response.data));
     });
 }
