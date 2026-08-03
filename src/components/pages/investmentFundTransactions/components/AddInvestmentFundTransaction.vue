@@ -139,7 +139,6 @@
 import { investmentFundTransactionsService } from "../../../../services/investmentFundTransactionsService.js";
 import { investmentFundsService } from "../../../../services/investmentFundsService.js";
 import { investmentFundCategoriesService } from "../../../../services/investmentFundCategoriesService.js";
-import {ref, watch} from "vue";
 
 export default {
   name: "AddInvestmentFundTransaction",
@@ -229,7 +228,7 @@ export default {
     },
     validFundCategory: function () {
       var investmentFundCategoryIdIsValid = false;
-      if (this.investmentFundTransaction.investmentFundCategoryId !== null && this.investmentFundTransaction.investmentFundCategoryId !== undefined) {
+      if ((this.investmentFundTransaction.investmentFundCategoryId !== null && this.investmentFundTransaction.investmentFundCategoryId !== undefined) || this.investmentFundTransaction.type == 3) {
         investmentFundCategoryIdIsValid = true;
       }
       return investmentFundCategoryIdIsValid;

@@ -35,15 +35,31 @@
           <tbody></tbody>
         </table>
         <div class="text-left">
-          <button type="button" class="btn btn-primary" id="removeButton" v-on:click="removeSelectedTransactions"
-            :disabled="!removeButtonEnabled">
-            Remove
-          </button>
-          <hr>
-          <button type="button" class="btn btn-primary" id="uploadTransactionsButton" v-on:click="onPickFile">
-            Upload
-          </button>
-          <input type="file" style="display: none" ref="fileInput" accept=".xml,.json" v-on:change="onFilePicked" />
+          <button class="btn btn-primary" type="button" data-bs-toggle="dropdown">
+          Actions
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+          <li>
+            <a
+              class="dropdown-item"
+              v-bind:class= "{ disabled: !editButtonEnabled}"
+              id="editButton"
+              v-on:click="editSelectedInvestmentFundTransaction"
+            >
+              Edit
+            </a>
+          </li>
+          <li>
+            <a
+              class="dropdown-item"
+              v-bind:class= "{ disabled: !removeButtonEnabled}"
+              id="removeButton"
+              v-on:click="removeSelectedInvestmentFundTransactions"
+            >
+              Remove
+            </a>
+          </li>         
+        </ul>
         </div>
         <div class="text-left"></div>
       </div>
@@ -57,7 +73,6 @@ import "datatables.net-select-bs4";
 import "jquery-datatables-checkboxes";
 import $ from "jquery";
 import { investmentFundTransactionsService } from "../../../../services/investmentFundTransactionsService.js";
-import { investmentFundCategoriesService } from "../../../../services/investmentFundCategoriesService.js";
 import {
   convertDateTimeString,
   monthRanges,
@@ -95,6 +110,7 @@ export default {
       filters: possibleFilters,
       currentFilter: possibleFilters[0],
       removeButtonEnabled: false,
+      editButtonEnabled: false,
       transactionsTable: null,
     };
   },
@@ -159,21 +175,21 @@ export default {
             },
           },
           {
-            data: "fund",
+            data: "investmentFundCategory",
             render: function (data) {
               var fundName = "";
               if (data != null) {
-                fundName = data.name;
+                fundName = data.investmentFund.name;
               }
               return fundName;
             },
           },
           {
-            data: "investmentFund",
+            data: "investmentFundCategory",
             render: function (data) {
               var fundCurrency = "";
               if (data != null) {
-                fundCurrency = data.currency;
+                fundCurrency = data.investmentFund.currency;
               }
               return fundCurrency;
             },
@@ -182,10 +198,12 @@ export default {
       });
 
       self.transactionsTable.on("select", function () {
-        self.enableRemoveButton();
+          self.enableRemoveButton();
+        self.enableEditButton();
       });
       self.transactionsTable.on("deselect", function () {
         self.enableRemoveButton();
+        self.enableEditButton();
       });
     },
     refresh: function () {
@@ -193,6 +211,7 @@ export default {
       this.clear();
       this.reload();
       this.enableRemoveButton();
+      this.enableEditButton();
     },
     clear: function () {
       this.transactionsTable.clear();
@@ -205,21 +224,67 @@ export default {
     render: function (transactions) {
       this.transactionsTable.rows.add(transactions);
       this.transactionsTable.draw();
-    },
-    removeSelectedTransactions: function () {
+    },removeSelectedInvestmentFundTransactions: function () {
       var self = this;
-      var selectedTransactions = self.transactionsTable
+      var selectedInvestmentFundTransactions = self.transactionsTable
         .rows({ selected: true })
         .data();
-      var removedTransactions = 0;
-      selectedTransactions.each(function (transaction) {
-        investmentFundTransactionsService.deleteInvestmentFundTransactionById(transaction.id).then(() => {
-          removedTransactions++;
-          if (removedTransactions == selectedTransactions.length) {
+      var removedInvestmentFundTransactions = 0;
+      selectedInvestmentFundTransactions.each(function (investmentFundTransaction) {
+        investmentFundTransactionsService.deleteInvestmentFundTransactionById(investmentFundTransaction.id).then(() => {
+          removedInvestmentFundTransactions++;
+          if (removedInvestmentFundTransactions == selectedInvestmentFundTransactions.length) {
             self.refresh();
           }
         });
       });
+    },
+    editSelectedInvestmentFundTransaction: function() {
+
+      var self = this;
+      var selectedInvestmentFundTransactions = self.transactionsTable
+        .rows({ selected: true })
+        .data();
+      selectedInvestmentFundTransactions.each(function (investmentFundTransaction){
+        self.$emit("investment-fund-transaction-edited", investmentFundTransaction);
+      });      
+    },
+    anyInvestmentFundTransactionsSelected: function () {
+      var anyInvestmentFundTransactionsSelected = false;
+      var selectedInvestmentFundTransactions = this.transactionsTable
+        .rows({ selected: true })
+        .data();
+      if (selectedInvestmentFundTransactions.length > 0) {
+        anyInvestmentFundTransactionsSelected = true;
+      }
+      return anyInvestmentFundTransactionsSelected;
+    },
+    oneInvestmentFundTransactionSelected: function(){
+      var oneInvestmentFundTransactionSelected = false;
+      var selectedInvestmentFundTransactions = this.transactionsTable
+        .rows({ selected: true })
+        .data();
+      if (selectedInvestmentFundTransactions.length == 1) {
+        oneInvestmentFundTransactionSelected = true;
+      }
+      return oneInvestmentFundTransactionSelected;
+    },
+    enableRemoveButton: function () {
+      if (this.anyInvestmentFundTransactionsSelected()) {
+        this.removeButtonEnabled = true;
+      } else {
+        this.removeButtonEnabled = false;
+      }
+    },
+    enableEditButton: function () {
+      if (this.oneInvestmentFundTransactionSelected()) {
+        this.editButtonEnabled = true;
+      } else {
+        this.editButtonEnabled = false;
+      }
+    },
+    deselectAllRows: function () {
+      this.transactionsTable.rows({ selected: true }).deselect();
     },
     changeCurrentFilter: function (filter) {
       this.currentFilter = filter;
@@ -240,26 +305,7 @@ if (this.currentFilter.id == "filter-none") {
         );
       }
     },
-    anyTransactionsSelected: function () {
-      var anyTransactionsSelected = false;
-      var selectedTransactions = this.transactionsTable
-        .rows({ selected: true })
-        .data();
-      if (selectedTransactions.length > 0) {
-        anyTransactionsSelected = true;
-      }
-      return anyTransactionsSelected;
-    },
-    enableRemoveButton: function () {
-      if (this.anyTransactionsSelected()) {
-        this.removeButtonEnabled = true;
-      } else {
-        this.removeButtonEnabled = false;
-      }
-    },
-    deselectAllRows: function () {
-      this.transactionsTable.rows({ selected: true }).deselect();
-    },
+
   },
   mounted() {
    investmentFundTransactionsService.getInvestmentFundTransactions().then((investmentFundTransactions) => {

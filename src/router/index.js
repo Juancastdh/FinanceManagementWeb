@@ -6,6 +6,7 @@ import TransactionsPage from "../components/pages/transactions/TransactionsPage.
 import AccountsPage from "../components/pages/accounts/AccountsPage.vue";
 import InvestmentFundsPage from "../components/pages/investmentFunds/InvestmentFundsPage.vue";
 import InvestmentFundCategoriesPage from "../components/pages/investmentFundCategories/InvestmentFundCategoriesPage.vue";
+import InvestmentFundTransactionsPage from "../components/pages/investmentFundTransactions/InvestmentFundTransactionsPage.vue";
 
 const routes = [
   {
@@ -42,6 +43,11 @@ const routes = [
     path: "/investment-fund-categories",
     name: "Investment Fund Categories",
     component: InvestmentFundCategoriesPage
+  },
+  {
+    path: "/investment-fund-transactions",
+    name: "Investment Fund Transactions",
+    component: InvestmentFundTransactionsPage
   }
 ];
 
