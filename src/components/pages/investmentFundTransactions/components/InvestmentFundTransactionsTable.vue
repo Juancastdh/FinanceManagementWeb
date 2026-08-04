@@ -308,7 +308,7 @@ if (this.currentFilter.id == "filter-none") {
 
   },
   mounted() {
-   investmentFundTransactionsService.getInvestmentFundTransactions().then((investmentFundTransactions) => {
+   this.getInvestmentFundTransactionsBasedOnFilter().then((investmentFundTransactions) => {
       this.init(investmentFundTransactions);
     });
   },
